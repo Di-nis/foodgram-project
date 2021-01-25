@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Рецепты{% endblock %}
+
+{% block css_block %}
+    <link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <main class="main container">
+        {% include "includes/card_tag.html" %}
+        <div class="card-list">
+            {% include "includes/card_recipe.html" with index=True %}
+        </div>
+    </main>
+
+{% endblock %}
+
+<!-- {% block card_footer %}
+    <div class="card__footer">
+        <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+    </div>
+{% endblock %} -->
+
+
+
+{% block js_block %}
+
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static 'js/components/CardList.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'indexNotAuth.js' %}"></script>
+
+{% endblock %}
+
+<!-- {% block content_1 %}
+
+    <main class="main container">
+        {% include "includes/card_tag.html" %}
+        <div class="card-list">
+            {% for recipe in page %}
+                {% include "includes/card_recipe.html" %}
+            {% endfor %}
+        </div>
+        {% if page.has_other_pages %}
+            {% include "includes/paginator.html" with items=page paginator=paginator %}
+        {% endif %}
+    </main>
+
+{% endblock %} -->
+
+
+
+
+
