@@ -1,13 +1,21 @@
 from django.db import models
 from django.forms import ModelForm, Textarea
-from .models import Recipe
+from .models import Recipe, Ingredient
 
 
 class RecipeForm(ModelForm):
     class Meta:
         model = Recipe
-        # fields = '__all__'
         exclude = ['author', 'slug']
-        widgets = {
-            'description': Textarea(attrs={'rows': 8}),
-        }
+        # widgets = {
+        #     'description': Textarea(attrs={'rows': 8,
+        #                                    'label class': "form__label",
+        #                                    'div class': 'form__field-group'}
+        #     )
+        # }
+
+
+class IngredientForm(ModelForm):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'

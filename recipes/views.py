@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from .models import Recipe, User, Ingredient, Follow, Favorite
-from .forms import RecipeForm
+from .forms import RecipeForm, IngredientForm
 import pandas as pd
 
 def index(request):
@@ -17,15 +17,18 @@ def index(request):
         }
     )
 
-def profile(request, username):
-    user_profile = get_object_or_404(User, username=username)
+# def profile(request, username):
+def profile(request, id):
+    # user_profile = get_object_or_404(User, username=username)
+    user_profile = get_object_or_404(User, id=id)
     recipes = user_profile.recipes.all()
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/profile.html', {
         'page': page,
-        'paginator': paginator
+        'paginator': paginator,
+        'user_profile': user_profile,
         }
     )
 
@@ -41,7 +44,7 @@ def new_recipe(request):
         return render(
             request, 'recipes/new_recipe.html', {
                 'form': form,
-                'is_created': True,
+                # 'is_created': True,
             }
         )
     form = RecipeForm()
@@ -124,6 +127,28 @@ def shop_list(request):
         }
     )
 
+@login_required
+def new_ingredient(request):
+    if request.method == 'POST':
+        form = IngredientForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            # recipe.author = request.user
+            recipe.save()
+            return redirect('index')
+        return render(
+            request, 'recipes/new_recipe.html', {
+                'form_ingredient': form,
+                # 'is_created': True,
+            }
+        )
+    form = RecipeForm()
+    return render(request, 'recipes/new_recipe.html', {
+        'form_ingredient': form,
+        # 'is_created': True,
+        }
+    )
+
 
 @login_required
 def follow_index(request):
@@ -141,24 +166,26 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    user = get_object_or_404(User, username=username)
-    if request.user != user and Follow.objects.filter(
-            user=User.objects.get(username=request.user.username),
-            author=User.objects.get(username=user.username)).count() == 0:
-        Follow.objects.get_or_create(user=request.user, author=user)
-        return redirect('profile', username=user.username)
-    return redirect('profile', username=user.username)
+    pass
+    # user = get_object_or_404(User, username=username)
+    # if request.user != user and Follow.objects.filter(
+    #         user=User.objects.get(username=request.user.username),
+    #         author=User.objects.get(username=user.username)).count() == 0:
+    #     Follow.objects.get_or_create(user=request.user, author=user)
+    #     return redirect('profile', username=user.username)
+    # return redirect('profile', username=user.username)
 
 
 @login_required
 def profile_unfollow(request, username):
-    user = get_object_or_404(User, username=username)
-    if Follow.objects.filter(
-            user=User.objects.get(username=request.user.username),
-            author=User.objects.get(username=user.username)).count() != 0:
-        Follow.objects.get(user=request.user, author=user).delete()
-        return redirect('profile', username=user.username)
-    return redirect('profile', username=user.username)
+    pass
+    # user = get_object_or_404(User, username=username)
+    # if Follow.objects.filter(
+    #         user=User.objects.get(username=request.user.username),
+    #         author=User.objects.get(username=user.username)).count() != 0:
+    #     Follow.objects.get(user=request.user, author=user).delete()
+    #     return redirect('profile', username=user.username)
+    # return redirect('profile', username=user.username)
 
 
 def download(request):

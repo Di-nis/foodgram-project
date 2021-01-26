@@ -8,17 +8,17 @@ import xlwt
 User = get_user_model()
 
 
-def test(request):
-    # Create the HttpResponse object with the appropriate headers.
-    response = HttpResponse(content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="example.xls"'
+# def test(request):
+#     # Create the HttpResponse object with the appropriate headers.
+#     response = HttpResponse(content_type='application/vnd.ms-excel')
+#     response['Content-Disposition'] = 'attachment; filename="example.xls"'
 
-    # Create the Exel
-    workbook = xlwt.Workbook()
-    # add data
-    # save to buffer
-    workbook.save(response)
-    return response
+#     # Create the Exel
+#     workbook = xlwt.Workbook()
+#     # add data
+#     # save to buffer
+#     workbook.save(response)
+#     return response
 
 # def test(request):
 #     id = []
