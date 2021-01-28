@@ -14,8 +14,13 @@
     <main class="main container">
         {% include "includes/card_tag.html" %}
         <div class="card-list">
-            {% include "includes/card_recipe.html" with favorite=True %}
+            {% for recipe in page %}
+                {% include "includes/card_recipe.html" with favorite=True %}
+            {% endfor %}
         </div>
+        {% if page.has_other_pages %}
+            {% include "includes/paginator.html" with items=page paginator=paginator %}
+        {% endif %}
     </main>
 
 {% endblock %}

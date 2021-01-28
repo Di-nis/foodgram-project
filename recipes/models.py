@@ -2,14 +2,14 @@ from django.db import models
 # from users.models import User
 from tags.models import Tag
 from django.contrib.auth import get_user_model
-from django.shortcuts import reverse
+
 
 User = get_user_model()
+
 
 class Ingredient(models.Model):
     '''Инградиенты'''
     name = models.CharField(max_length=200, verbose_name='Название')
-    # count = models.PositiveSmallIntegerField()
 
 
     class Meta:
@@ -22,35 +22,33 @@ class Ingredient(models.Model):
 
 class RecipeIngredient(models.Model):
     MEASURE_CHOICES = (
-        ('грамм', 'г.'),
+        ('г.', 'г.'),
         ('стакан', 'стакан'),
         ('кусок', 'кусок'),
-        ('штук', 'шт.'),
+        ('шт.', 'шт.'),
         ('по вкусу', 'по вкусу'), 
-        ('столовые ложки', 'ст.л.'),
-        ('чайные ложки', 'ч.л.'),
-        ('миллилитр', 'мл.'),
+        ('ст.л.', 'ст.л.'),
+        ('ч.л.', 'ч.л.'),
+        ('мл.', 'мл.'),
     )
-    # recipe = models.ForeignKey(
-    #     Recipe, 
-    #     on_delete=models.CASCADE,
-    #     related_name='numbers'
-    # )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='numbers'
+        related_name='numbers',
+        verbose_name='Инградиент'
     )
-    amount = models.IntegerField()
+    amount = models.IntegerField("Количество")
     measure = models.CharField(
         max_length=20,
         choices=MEASURE_CHOICES,
-        default=None
+        default=None,
+        verbose_name = 'Единица измерения'
     )
 
     class Meta:
         verbose_name = 'Инградиент (рецепт)'
         verbose_name_plural = 'Инградиенты (рецепт)'
+
 
 class Recipe(models.Model):
     '''Рецепты'''
@@ -84,16 +82,13 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name = 'Инградиенты'
     )
-    # ingredients_amount = models.PositiveSmallIntegerField(
-    #     'Количество (объём)',
-    # )
     prep_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         # 'минут'
     )
     description = models.TextField(
         'Описание',
-        # max_length=500,
+        max_length=500,
         )
     image = models.ImageField(
         "Загрузить фото",
@@ -113,38 +108,65 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
-    # def get_absolute_url(self):
-        # return reverse('recipe', kwargs={'slug': self.slug})
-        # return reverse('recipe', args=[self.name])
-
     def __str__(self):
         return '{}'.format(self.name)
 
 
-
 class Follow(models.Model):
-    user = models.ForeignKey(User,
-                             on_delete=models.CASCADE,
-                             related_name="follower"
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="follower",
+        verbose_name='Подписчик',
     )
-    author = models.ForeignKey(User,
-                               on_delete=models.CASCADE,
-                               related_name="following"
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="following",
+        verbose_name='Подписка',
     )
 
     class Meta:
         unique_together = ['user', 'author']
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User,
-                             on_delete=models.CASCADE,
-                             related_name="purchaser"
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="favorite",
+        verbose_name='Пользователь'
     )
-    recipe = models.ForeignKey(Recipe,
-                             on_delete=models.CASCADE,
-                             related_name="purchase"
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="favorite",
+        verbose_name='Рецепт'
     )
 
     class Meta:
         unique_together = ['user', 'recipe']
+        verbose_name = 'Избранный рецепт'
+        verbose_name_plural = 'Избранные рецепты'
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="purchaser",
+        verbose_name='Пользователь'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="purchase",
+        verbose_name='Рецепт'
+    )
+
+    class Meta:
+        unique_together = ['user', 'recipe']
+        verbose_name = 'Рецепты (покупка)'
+        verbose_name_plural = 'Рецепты (покупка)'

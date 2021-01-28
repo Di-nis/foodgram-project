@@ -5,6 +5,20 @@ from django.core.paginator import Paginator
 from .models import Recipe, User, Ingredient, Follow, Favorite
 from .forms import RecipeForm, IngredientForm
 import pandas as pd
+from rest_framework import filters, permissions, viewsets
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
+from .serializers import FollowSerializer
+from .permissions import IsStaffOrOwner
+from excel_response import ExcelResponse
+
+
+class BaseCreateDestroyViewSet(
+    CreateModelMixin,
+    DestroyModelMixin,
+    viewsets.GenericViewSet
+):
+    pass
+
 
 def index(request):
     recipe_list = Recipe.objects.all()
@@ -44,7 +58,7 @@ def new_recipe(request):
         return render(
             request, 'recipes/new_recipe.html', {
                 'form': form,
-                # 'is_created': True,
+                'is_created': True,
             }
         )
     form = RecipeForm()
@@ -56,15 +70,10 @@ def new_recipe(request):
 
 
 def recipe(request, recipe_id):
-# def recipe(request):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    # items = post_profile.comments.all()
-    # form = CommentForm()
     return render(request, 'recipes/recipe.html', {
         'recipe': recipe,
         # 'user_profile': post_profile.author,
-        # 'items': items,
-        # 'form': form
         }
     )
 
@@ -81,43 +90,46 @@ def recipe_edit(request, recipe_id):
         )
         if form_edited.is_valid():
             form_edited.save()
-            return redirect('recipe_edit',
-                            post_id=post_profile.id)
-        # return render(request, 'new_post.html', {
-        #     'form': form,
-        #     'post_profile': post_profile,
-        #     }
-        # )
+            return redirect('recipe',
+                            recipe_id=recipe.id)
+        return render(request, 'recipes/new_recipe.html', {
+            'form': form,
+            'recipe': recipe,
+            }
+        )
     return redirect('index')
 
 
 @login_required
 def favorite_recipes(request):
+    recipe_list = Recipe.objects.filter(favorite__user=request.user)
+    paginator = Paginator(recipe_list, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     return render(request, 'recipes/favorite.html', {
-        # 'page': page,
-        # 'paginator': paginator
+        'page': page,
+        'paginator': paginator
         }
     )
 
 
-@login_required
-def add_recipe_favorite(request, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
-    Favorite.objects.get_or_create(user=request.user, recipe=recipe)
-    return redirect('shop_list')
+# @login_required
+# def add_recipe_favorite(request, recipe_id):
+#     recipe = get_object_or_404(Recipe, id=recipe_id)
+#     Favorite.objects.get_or_create(user=request.user, recipe=recipe)
+#     return redirect('shop_list')
 
 
-@login_required
-def delete_recipe_favorite(request, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
-    Favorite.objects.get_or_create(user=request.user, recipe=recipe).delete()
-    return redirect('shop_list')
+# @login_required
+# def delete_recipe_favorite(request, recipe_id):
+#     recipe = get_object_or_404(Recipe, id=recipe_id)
+#     Favorite.objects.get_or_create(user=request.user, recipe=recipe).delete()
+#     return redirect('shop_list')
 
 
 @login_required
 def shop_list(request):
-    recipe_list = Recipe.objects.filter(
-        author__following__in=Follow.objects.filter(user=request.user))
+    recipe_list = Recipe.objects.filter(purchase__user=request.user)
     paginator = Paginator(recipe_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -163,10 +175,18 @@ def follow_index(request):
         }
     )
 
+class FollowsViewSet(BaseCreateDestroyViewSet):
+    queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
+    # filter_backends = [filters.SearchFilter]
+    permission_classes = [IsStaffOrOwner, ]
+    # search_fields = ['=name', ]
+    # lookup_field = 'slug'
 
-@login_required
-def profile_follow(request, username):
-    pass
+
+# @login_required
+# def profile_follow(request, username):
+#     pass
     # user = get_object_or_404(User, username=username)
     # if request.user != user and Follow.objects.filter(
     #         user=User.objects.get(username=request.user.username),
@@ -176,9 +196,9 @@ def profile_follow(request, username):
     # return redirect('profile', username=user.username)
 
 
-@login_required
-def profile_unfollow(request, username):
-    pass
+# @login_required
+# def profile_unfollow(request, username):
+#     pass
     # user = get_object_or_404(User, username=username)
     # if Follow.objects.filter(
     #         user=User.objects.get(username=request.user.username),
@@ -189,9 +209,16 @@ def profile_unfollow(request, username):
 
 
 def download(request):
-    # df = pd.read_csv('C:/Dev/foodgram-project/ingredients/ingredients.csv', delimiter=',', nrows=50)
-    # return df.to_excel("output.xlsx")
-    pass
+    list = [[], []]
+    recipe_list = Recipe.objects.filter(purchase__user=request.user)
+    for recipe in recipe_list:
+        list[0]+=[recipe.name]
+        list[1]+=[recipe.description]
+    shop_list = [['Column 1', 'Column 1'], 
+                 list[0],
+                 list[1]
+                ]
+    return ExcelResponse(shop_list, 'shop_list')
 
 
 def page_not_found(request, exception):
