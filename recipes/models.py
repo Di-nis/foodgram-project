@@ -9,7 +9,11 @@ User = get_user_model()
 
 class Ingredient(models.Model):
     '''Инградиенты'''
-    name = models.CharField(max_length=200, verbose_name='Название')
+    name = models.CharField(
+        'Название',
+        max_length=200,
+        unique=True
+    )
 
 
     class Meta:
@@ -37,13 +41,21 @@ class RecipeIngredient(models.Model):
         related_name='numbers',
         verbose_name='Инградиент'
     )
-    amount = models.IntegerField("Количество")
+    amount = models.IntegerField(
+        "Количество",
+        blank=True,
+        null=True,
+    )
     measure = models.CharField(
         max_length=20,
         choices=MEASURE_CHOICES,
         default=None,
         verbose_name = 'Единица измерения'
     )
+
+    def __str__(self):
+        return '{} {} - {}'.format(
+            self.ingredient, self.amount, self.measure)
 
     class Meta:
         verbose_name = 'Инградиент (рецепт)'
@@ -83,13 +95,12 @@ class Recipe(models.Model):
         verbose_name = 'Инградиенты'
     )
     prep_time = models.PositiveSmallIntegerField(
-        'Время приготовления',
-        # 'минут'
+        'Время приготовления (в минутах)',
     )
     description = models.TextField(
-        'Описание',
-        max_length=500,
-        )
+        'Инструкция по приготовлению',
+        max_length=1000,
+    )
     image = models.ImageField(
         "Загрузить фото",
         upload_to='recipes/',
@@ -101,15 +112,17 @@ class Recipe(models.Model):
     slug = models.SlugField(
         'Уникальный URL',
         unique=True,
+        blank=True,
+        null=True,
     )
+
+    def __str__(self):
+        return '{}'.format(self.name)
 
     class Meta:
         ordering = ["-pub_date"]
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-
-    def __str__(self):
-        return '{}'.format(self.name)
 
 
 class Follow(models.Model):

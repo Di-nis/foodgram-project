@@ -5,16 +5,17 @@ from .models import (Ingredient, Recipe, RecipeIngredient,
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ("name", )
+    list_display = ("id", "name", )
     list_filter = ("name",)
+    search_fields = ("name", )
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ("author", "name")
+    list_display = ("id", "author", "name")
     list_filter = ("author", "name",)
 
 class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ("ingredient", "amount")
+    list_display = ("id", "ingredient", "amount", "measure")
     # list_filter = ("author", "name",)
 
 
@@ -24,12 +25,12 @@ class FollowAdmin(admin.ModelAdmin):
 
 
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ("user", "recipe")
+    list_display = ("id", "user", "recipe")
     # list_filter = ("author", "name",)
 
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ("user", "recipe")
+    list_display = ("id", "user", "recipe")
     # list_filter = ("author", "name",)
 
 admin.site.register(Ingredient, IngredientAdmin)

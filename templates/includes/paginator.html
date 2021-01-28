@@ -1,52 +1,19 @@
-<nav aria-label="Переключение страниц">
-    <ul class="pagination">
+<nav class="pagination" aria-label="Переключение страниц">
+    <ul class="pagination__container">
         {% if items.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ items.previous_page_number }}">&laquo; Предыдущая</a></li>
-        {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo; Предыдущая</a></li>
+            <li class="pagination__item"><a class="pagination__link link" href="?page={{ items.previous_page_number }}"><span class="icon-left"></span></a></li>
         {% endif %}
-        {% for i in paginator.page_range %}
-                {% if items.number == i %}
-                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(текущая)</span></span></li>
-                {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                {% endif %}
+
+        {% for page in paginator.page_range %}
+            {% if items.number == page %}
+                <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="#">{{ page }}</a></li>
+            {% else %}
+                <li class="pagination__item"><a class="pagination__link link" href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
         {% endfor %}
+
         {% if items.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ items.next_page_number }}">Следующая &raquo;</a></li>
-        {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Следующая &raquo;</a></li>
+            <li class="pagination__item"><a class="pagination__link link" href="?page={{ items.next_page_number }}"><span class="icon-right"></span></a></li>
         {% endif %}
     </ul>
 </nav>
-
-
-        <!-- <nav class="pagination" aria-label="Переключение страниц">
-            <ul class="pagination__container">
-                {% if items.has_previous %}
-                    <li class="pagination__item"><a class="pagination__link link" href="?page={{ items.previous_page_number }}"><span class="icon-left"></span></a></li>
-                {% else %}
-                    
-                {% endif %}
-
-                {% for page in paginator.page_range %}
-                    {% if items.number == page %}
-                        <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="#">1</a></li>
-                    {% else %}
-                        <li class="pagination__item"><a class="pagination__link link" href="#">2</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if items.has_next %}
-
-                {% else %}
-
-                {% endif %}
-                <li class="pagination__item"><a class="pagination__link link" href="#"><span class="icon-left"></span></a></li>
-                <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="#">1</a></li>
-                <li class="pagination__item"><a class="pagination__link link" href="#">2</a></li>
-                <li class="pagination__item"><a class="pagination__link link" href="#">3</a></li>
-                <li class="pagination__item"><a class="pagination__link link" href="#">4</a></li>
-                <li class="pagination__item"><a class="pagination__link link" href="#">5</a></li>
-                <li class="pagination__item"><a class="pagination__link link" href="#"><span class="icon-right"></span></a></li>
-            </ul>
-        </nav> -->

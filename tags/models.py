@@ -15,4 +15,4 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
     # def __str__():
-    #     return '{}'.format(self.title)
+    #     return self.title

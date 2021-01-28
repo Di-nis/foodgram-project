@@ -31,7 +31,7 @@ urlpatterns = [
     path("recipe/", include(extra_patterns_recipe)),
     path("my/", include(extra_patterns_my)),
     # path("<str:username>/", views.profile, name='profile'),
-    path("<int:id>/", views.profile, name='profile'),
+    path("users/<int:id>/", views.profile, name='profile'),
     # path("<str:username>/follow/",
     #      views.profile_follow, name="profile_follow"),
     # path("<str:username>/unfollow/",
