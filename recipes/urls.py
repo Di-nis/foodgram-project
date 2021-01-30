@@ -11,6 +11,7 @@ v1_router.register('subscriptions', FollowsViewSet, 'Follows')
 
 extra_patterns_recipe = [
     path("new/", views.new_recipe, name='new_recipe'),
+    path("filters/<int:tag_id>/", views.recipes_filter , name='recipes_filter'),
     path("<int:recipe_id>/", views.recipe, name='recipe'),
     path("<int:recipe_id>/edit/", views.recipe_edit, name='recipe_edit'),
     # path("<int:recipe_id>/add/", views.add_recipe_favorite, name='recipe_add_to_shoplist'),

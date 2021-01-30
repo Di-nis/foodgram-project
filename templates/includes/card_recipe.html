@@ -19,7 +19,7 @@
             <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' id=recipe.author.id %}" style="color: black">{{ recipe.author.get_full_name }}</a></p>
         </div>
     </div>
-    {% if request.is_authenticated %} %}
+    {% if request.user.is_authenticated %}
         {% if 'index' %}
             <div class="card__footer">
                 <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
@@ -31,7 +31,6 @@
             </div>
         {% endif %}
     {% endif %}
-    <!-- {% block card_footer %}{% endblock %} -->
 </div>
 
 

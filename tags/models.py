@@ -7,12 +7,19 @@ class Tag(models.Model):
         ('Обед', 'Обед'),
         ('Ужин', 'Ужин'),
     )
-    title = models.CharField('Название', max_length=50, choices=TAG_CHOICES)
+    title = models.CharField(
+        'Название',
+        max_length=50,
+        choices=TAG_CHOICES,
+        unique=True
+    )
     # slug = models.SlugField(max_length=50, unique=True)
+
+    def __str__(self):
+        return '{}'.format(self.title)
 
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
-    # def __str__():
-    #     return self.title
+

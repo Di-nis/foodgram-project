@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from .models import Recipe, User, Ingredient, Follow, Favorite
+from tags.models import Tag
 from .forms import RecipeForm, IngredientForm
 import pandas as pd
 from rest_framework import filters, permissions, viewsets
@@ -22,12 +23,14 @@ class BaseCreateDestroyViewSet(
 
 def index(request):
     recipe_list = Recipe.objects.all()
+    tag_list = Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/index.html', {
         'page': page,
-        'paginator': paginator
+        'paginator': paginator,
+        'tag_list': tag_list
         }
     )
 
@@ -103,10 +106,23 @@ def recipe_edit(request, recipe_id):
 @login_required
 def favorite_recipes(request):
     recipe_list = Recipe.objects.filter(favorite__user=request.user)
+    tag_list = Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/favorite.html', {
+        'page': page,
+        'paginator': paginator,
+        'tag_list': tag_list
+        }
+    )
+
+def recipes_filter(request, tag_id):
+    recipe_list = Recipe.objects.filter(tags__id=tag_id)
+    paginator = Paginator(recipe_list, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'recipes/recipes_filter.html', {
         'page': page,
         'paginator': paginator
         }
