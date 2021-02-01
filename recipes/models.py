@@ -1,98 +1,81 @@
-from django.db import models
-# from users.models import User
-from tags.models import Tag
+from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
+from django.db import models
 
+# from users.models import User
 
 User = get_user_model()
 
 
-class Ingredient(models.Model):
-    '''Инградиенты'''
-    name = models.CharField(
-        'Название',
-        max_length=200,
-        unique=True
-    )
-
-
-    class Meta:
-        verbose_name = 'Инградиент'
-        verbose_name_plural = 'Инградиенты'
-
-    def __str__(self):
-        return '{}'.format(self.name)
-
-
-class RecipeIngredient(models.Model):
-    MEASURE_CHOICES = (
-        ('г.', 'г.'),
-        ('стакан', 'стакан'),
-        ('кусок', 'кусок'),
-        ('шт.', 'шт.'),
-        ('по вкусу', 'по вкусу'), 
-        ('ст.л.', 'ст.л.'),
-        ('ч.л.', 'ч.л.'),
-        ('мл.', 'мл.'),
-    )
-    ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.CASCADE,
-        related_name='numbers',
-        verbose_name='Инградиент'
-    )
-    amount = models.IntegerField(
-        "Количество",
-        blank=True,
-        null=True,
-    )
-    measure = models.CharField(
-        max_length=20,
-        choices=MEASURE_CHOICES,
-        default=None,
-        verbose_name = 'Единица измерения'
-    )
-
-    def __str__(self):
-        return '{} {} - {}'.format(
-            self.ingredient, self.amount, self.measure)
-
-    class Meta:
-        verbose_name = 'Инградиент (рецепт)'
-        verbose_name_plural = 'Инградиенты (рецепт)'
-
-
-class Recipe(models.Model):
-    '''Рецепты'''
+class Tag(models.Model):
     TAG_CHOICES = (
         ('Завтрак', 'Завтрак'),
         ('Обед', 'Обед'),
         ('Ужин', 'Ужин'),
     )
+    title = models.CharField(
+        'Название',
+        max_length=50,
+        choices=TAG_CHOICES,
+        unique=True
+    )
+    display_name = models.CharField(
+        'Имя тега в шаблоне',
+        max_length=20,
+    )
+    color = models.CharField(
+        'Цвет тега',
+        max_length=20,
+    )
+
+    def __str__(self):
+        return '{}'.format(self.title)
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+
+class Ingredient(models.Model):
+    name = models.CharField(
+        'Название',
+        max_length=200,
+        unique=True
+    )
+    dimension = models.CharField(
+        'Единица измерения',
+        max_length=10,
+    )
+
+    def __str__(self):
+        return '{} {}'.format(self.name, self.dimension)
+
+    class Meta:
+        verbose_name = 'Инградиент'
+        verbose_name_plural = 'Инградиенты'
+
+
+class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор'
     )
-    name = models.CharField(
+    title = models.CharField(
         'Название рецепта',
         max_length=200
     )
     tags = models.ManyToManyField(
         Tag,
         related_name='recipes',
-        verbose_name = 'Теги'
+        verbose_name = 'Теги',
     )
-    # tags = models.CharField(
-    #     max_length=20,
-    #     choices=TAG_CHOICES,
-    #     default=None
-    # )
     ingredients = models.ManyToManyField(
-        RecipeIngredient,
-        related_name='recipes',
-        verbose_name = 'Инградиенты'
+        Ingredient,
+        through='RecipeIngredient',
+        verbose_name = 'Инградиент'
     )
     prep_time = models.PositiveSmallIntegerField(
         'Время приготовления (в минутах)',
@@ -109,15 +92,19 @@ class Recipe(models.Model):
         "Дата публикации",
         auto_now_add=True
     )
-    slug = models.SlugField(
-        'Уникальный URL',
-        unique=True,
-        blank=True,
-        null=True,
+    # slug = models.SlugField(
+    #     'Уникальный URL',
+    #     unique=True,
+    #     blank=True,
+    #     null=True,
+    # )
+    slug = AutoSlugField(
+        populate_from='title',
+        allow_unicode=True
     )
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.title)
 
     class Meta:
         ordering = ["-pub_date"]
@@ -125,61 +112,50 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
 
-class Follow(models.Model):
-    user = models.ForeignKey(
-        User,
+class RecipeIngredient(models.Model):
+    # MEASURE_CHOICES = (
+    #     ('г.', 'г.'),
+    #     ('стакан', 'стакан'),
+    #     ('кусок', 'кусок'),
+    #     ('шт.', 'шт.'),
+    #     ('по вкусу', 'по вкусу'), 
+    #     ('ст.л.', 'ст.л.'),
+    #     ('ч.л.', 'ч.л.'),
+    #     ('мл.', 'мл.'),
+    # )
+    ingredient = models.ForeignKey(
+        Ingredient,
         on_delete=models.CASCADE,
-        related_name="follower",
-        verbose_name='Подписчик',
-    )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="following",
-        verbose_name='Подписка',
-    )
-
-    class Meta:
-        unique_together = ['user', 'author']
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-
-
-class Favorite(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="favorite",
-        verbose_name='Пользователь'
+        related_name='numbers',
+        verbose_name='Инградиент'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name="favorite",
-        verbose_name='Рецепт'
+        related_name='ingredients_amounts'
     )
+    amount = models.DecimalField(
+        "Количество",
+        max_digits=5,
+        decimal_places=1,
+        validators=[MinValueValidator(0)],
+        blank=True,
+        null=True,
+    )
+    # measure = models.CharField(
+    #     max_length=20,
+    #     choices=MEASURE_CHOICES,
+    #     default=None,
+    #     verbose_name = 'Единица измерения'
+    # )
+
+    def __str__(self):
+        return '{} {}'.format(
+            self.ingredient, self.amount)
 
     class Meta:
-        unique_together = ['user', 'recipe']
-        verbose_name = 'Избранный рецепт'
-        verbose_name_plural = 'Избранные рецепты'
+        verbose_name = 'Инградиент (рецепт)'
+        verbose_name_plural = 'Инградиенты (рецепт)'
 
 
-class Purchase(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="purchaser",
-        verbose_name='Пользователь'
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name="purchase",
-        verbose_name='Рецепт'
-    )
 
-    class Meta:
-        unique_together = ['user', 'recipe']
-        verbose_name = 'Рецепты (покупка)'
-        verbose_name_plural = 'Рецепты (покупка)'

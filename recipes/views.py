@@ -1,29 +1,20 @@
-from django.shortcuts import render, get_object_or_404, redirect
+import pandas as pd
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-
-from .models import Recipe, User, Ingredient, Follow, Favorite
-from tags.models import Tag
-from .forms import RecipeForm, IngredientForm
-import pandas as pd
-from rest_framework import filters, permissions, viewsets
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
-from .serializers import FollowSerializer
-from .permissions import IsStaffOrOwner
+from django.shortcuts import get_object_or_404, redirect, render
 from excel_response import ExcelResponse
 
+from .forms import IngredientForm, RecipeForm
+from .models import Recipe, Tag
 
-class BaseCreateDestroyViewSet(
-    CreateModelMixin,
-    DestroyModelMixin,
-    viewsets.GenericViewSet
-):
-    pass
+User = get_user_model()
 
 
 def index(request):
     recipe_list = Recipe.objects.all()
-    tag_list = Tag.objects.all()
+    # tag_list = Tag.objects.all()
+    tag_list=Tag.objects.filter(recipes__in=Recipe.objects.all())
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -106,7 +97,8 @@ def recipe_edit(request, recipe_id):
 @login_required
 def favorite_recipes(request):
     recipe_list = Recipe.objects.filter(favorite__user=request.user)
-    tag_list = Tag.objects.all()
+    tag_list = Tag.objects.filter(
+        recipes__in=Recipe.objects.filter(favorite__user=request.user))
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -180,24 +172,17 @@ def new_ingredient(request):
 
 @login_required
 def follow_index(request):
-    recipe_list = Recipe.objects.filter(
-        author__following__in=Follow.objects.filter(user=request.user))
-    paginator = Paginator(recipe_list, 10)
+    user_list = User.objects.filter(following__user=request.user)
+    paginator = Paginator(user_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'recipes/follow.html', {
+    return render(request, 'recipes/MyFollow.html', {
         'page': page,
         'paginator': paginator
         }
     )
 
-class FollowsViewSet(BaseCreateDestroyViewSet):
-    queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
-    # filter_backends = [filters.SearchFilter]
-    permission_classes = [IsStaffOrOwner, ]
-    # search_fields = ['=name', ]
-    # lookup_field = 'slug'
+
 
 
 # @login_required

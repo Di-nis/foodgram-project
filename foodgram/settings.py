@@ -1,7 +1,7 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
 
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -29,8 +29,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'recipes',
-    'tags',
     'about',
+    'api',
     'sorl.thumbnail',
 ]
 
@@ -133,7 +133,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = BASE_DIR / 'static'
 
 
 MEDIA_URL = '/media/'

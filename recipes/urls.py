@@ -1,13 +1,6 @@
 from django.urls import include, path
 
 from . import views
-from .views import FollowsViewSet
-from rest_framework.routers import DefaultRouter
-
-v1_router = DefaultRouter()
-v1_router.register('subscriptions', FollowsViewSet, 'Follows')
-# v1_router.register('favorites', FavoritesViewSet, 'Favorites')
-# v1_router.register('purchases', PurchasesViewSet, 'Purchases')
 
 extra_patterns_recipe = [
     path("new/", views.new_recipe, name='new_recipe'),
@@ -28,7 +21,6 @@ extra_patterns_my = [
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("api/v1/", include(v1_router.urls)),
     path("recipe/", include(extra_patterns_recipe)),
     path("my/", include(extra_patterns_my)),
     # path("<str:username>/", views.profile, name='profile'),

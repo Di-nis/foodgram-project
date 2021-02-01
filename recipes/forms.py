@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ModelForm, Textarea
-from .models import Recipe, Ingredient
+
+from .models import Ingredient, Recipe
 
 
 class RecipeForm(ModelForm):

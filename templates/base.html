@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="ru">
 <head>
@@ -7,6 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %} </title>
     {% block css_block %}{% endblock %}
+    {% block js_block %}{% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{% static "favicon.ico" %}">
 </head>
 
 <body class="body">
@@ -18,7 +21,7 @@
 
     {% include 'includes/footer.html' %}
 
-    {% block js_block %}{% endblock %}
+
 
 </body>
 

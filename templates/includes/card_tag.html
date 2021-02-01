@@ -1,8 +1,8 @@
 <ul class="tags">
     {% for tag in tag_list %}
     <li class="tags__item">
-        <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="{% url 'recipes_filter' tag_id=tag.id %}"></a>
-        <span class="tags__label">{{ tag.title }}</span>
+        <a id="{{ tag.id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} href="{% url 'recipes_filter' tag_id=tag.id %}"></a>
+        <span for="{{ tag.display_name }}" class="tags__label">{{ tag.title }}</span>
     </li>
     {% endfor %}
     <!-- <li class="tags__item">
