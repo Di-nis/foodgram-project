@@ -7,14 +7,16 @@ from excel_response import ExcelResponse
 
 from .forms import IngredientForm, RecipeForm
 from .models import Recipe, Tag
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 User = get_user_model()
 
 
 def index(request):
     recipe_list = Recipe.objects.all()
-    # tag_list = Tag.objects.all()
-    tag_list=Tag.objects.filter(recipes__in=Recipe.objects.all())
+    tag_list=Tag.objects.prefetch_related('recipes')
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -176,6 +178,7 @@ def follow_index(request):
     paginator = Paginator(user_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    # print(user_list.filter(count__lg))
     return render(request, 'recipes/MyFollow.html', {
         'page': page,
         'paginator': paginator
@@ -210,16 +213,33 @@ def follow_index(request):
 
 
 def download(request):
-    list = [[], []]
-    recipe_list = Recipe.objects.filter(purchase__user=request.user)
-    for recipe in recipe_list:
-        list[0]+=[recipe.name]
-        list[1]+=[recipe.description]
-    shop_list = [['Column 1', 'Column 1'], 
-                 list[0],
-                 list[1]
-                ]
-    return ExcelResponse(shop_list, 'shop_list')
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Hello world.")
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+    # list = [[], []]
+    # recipe_list = Recipe.objects.filter(purchase__user=request.user)
+    # for recipe in recipe_list:
+    #     list[0]+=[recipe.name]
+    #     list[1]+=[recipe.description]
+    # shop_list = [['Column 1', 'Column 1'], 
+    #              list[0],
+    #              list[1]
+    #             ]
+    # return ExcelResponse(shop_list, 'shop_list')
 
 
 def page_not_found(request, exception):
@@ -233,3 +253,5 @@ def page_not_found(request, exception):
 
 def server_error(request):
     return render(request, "misc/500.html", status=500) 
+
+

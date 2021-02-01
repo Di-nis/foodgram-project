@@ -52,8 +52,8 @@ class Ingredient(models.Model):
         return '{} {}'.format(self.name, self.dimension)
 
     class Meta:
-        verbose_name = 'Инградиент'
-        verbose_name_plural = 'Инградиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
 
 class Recipe(models.Model):
@@ -85,7 +85,7 @@ class Recipe(models.Model):
         max_length=1000,
     )
     image = models.ImageField(
-        "Загрузить фото",
+        "Изображение",
         upload_to='recipes/',
     )
     pub_date = models.DateTimeField(
@@ -127,7 +127,7 @@ class RecipeIngredient(models.Model):
         Ingredient,
         on_delete=models.CASCADE,
         related_name='numbers',
-        verbose_name='Инградиент'
+        verbose_name='Ингредиент'
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -154,8 +154,8 @@ class RecipeIngredient(models.Model):
             self.ingredient, self.amount)
 
     class Meta:
-        verbose_name = 'Инградиент (рецепт)'
-        verbose_name_plural = 'Инградиенты (рецепт)'
+        verbose_name = 'Ингредиент (рецепт)'
+        verbose_name_plural = 'Ингредиенты (рецепт)'
 
 
 

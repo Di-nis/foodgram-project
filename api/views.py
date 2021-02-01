@@ -68,4 +68,6 @@ class FavoritesViewSet(CreateModelMixin, DestroyModelMixin, viewsets.GenericView
 class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    search_fields = ['=name', ]
+    filter_backends = [filters.SearchFilter]
+    permission_classes = [permissions.AllowAny, ]
+    search_fields = ['name', ]

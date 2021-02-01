@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block content %}
-
     <main class="main container">
         <div class="main__header">
             <h1 class="main__title">Рецепты</h1>
@@ -23,12 +22,9 @@
             {% include "includes/paginator.html" with items=page paginator=paginator %}
         {% endif %}
     </main>
-
 {% endblock %}
 
-
 {% block js_block %}
-
     <script src="{% static 'js/components/MainCards.js' %}"></script>
     <script src="{% static 'js/components/Purchases.js' %}"></script>
     <script src="{% static 'js/config/config.js' %}"></script>
@@ -41,5 +37,4 @@
     {% else %}
         <script src="{% static 'indexNotAuth.js' %}"></script>
     {% endif %}
-
 {% endblock %}

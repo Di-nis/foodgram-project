@@ -1,11 +1,12 @@
 {% load static %}
+{% load recipe_filters %}
 <div class="card" data-id="{{ recipe.id }}">
     {% load thumbnail %}
-    {% thumbnail recipe.image "960x339" crop="center" upscale=True as im %}
-        <a href="#" class="link" target="_blank"><img src="{{ im.url }}" alt="Нет изображения" class="card__image"></a>
+    {% thumbnail recipe.image "600x500" crop="center" upscale=True as im %}
+        <a href="{% url 'recipe' recipe_id=recipe.id %}" class="link" target="_blank"><img src="{{ im.url }}" alt="Нет изображения" class="card__image"></a>
     {% endthumbnail %}
     <div class="card__body">
-        <a class="card__title link" href="{% url 'recipe' recipe_id=recipe.id %}" target="_blank">{{ recipe.name }}</a>
+        <a class="card__title link" href="{% url 'recipe' recipe_id=recipe.id %}" target="_blank">{{ recipe.title }}</a>
         <ul class="card__items">
             {% for tag in recipe.tags.all %}
                 <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.title }}</span></li>
@@ -18,20 +19,16 @@
     </div>
     {% if user.is_authenticated %}
         <div class="card__footer">
-            <button class="button button_style_light-blue" name="purchases"><span class="icon-minus button__icon"></span>Удалить</button
+            {% if recipe|is_purchase:user %}
+                <button class="button button_style_light-blue-outline" name="purchpurchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
+            {% else %}
+                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+            {% endif %}
+            <!-- {% if recipe|is_favorite:user %} -->
+                <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+            {% else %}
+                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+            {% endif %}
         </div>
-    {% else %}
-        
-
-        
     {% endif %}
-
 </div>
-
-
-<!-- <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button> -->
-<!-- {% if recipe.purchase.user == user %}
-<button class="button button_style_light-blue" name="purchases"><span class="icon-plus button__icon"></span>Удалить</button>
-{% else %}
-<button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-{% endif %} -->
