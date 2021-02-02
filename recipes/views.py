@@ -16,7 +16,8 @@ User = get_user_model()
 
 def index(request):
     recipe_list = Recipe.objects.all()
-    tag_list=Tag.objects.prefetch_related('recipes')
+    # tag_list=Tag.objects.prefetch_related('recipes')
+    tag_list=Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
