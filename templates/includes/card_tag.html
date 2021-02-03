@@ -1,7 +1,8 @@
+{% load recipe_filters %}
 <ul class="tags">
     {% for tag in tag_list %}
     <li class="tags__item">
-        <a id="{{ tag.id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} href="{% url 'recipes_filter' tag_id=tag.id %}"></a>
+        <a id="{{ tag.display_name }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} {% if active %}tags__checkbox_active{% endif %} href="#"></a>
         <span for="{{ tag.display_name }}" class="tags__label">{{ tag.title }}</span>
     </li>
     {% endfor %}

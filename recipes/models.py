@@ -26,6 +26,7 @@ class Tag(models.Model):
     )
     color = models.CharField(
         'Цвет тега',
+        # primary_key=True,
         max_length=20,
     )
 

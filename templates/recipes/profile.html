@@ -10,20 +10,23 @@
 {% block content %}
 
     <main class="main container">
+        {% csrf_token %}
         <div class="main__header">
             <h1 class="main__title">{% if user_profile.get_full_name == '' %} {{ user_profile }} {% else %} {{ user_profile.get_full_name }} {% endif %}</h1>
             {% include "includes/card_tag.html" %}
         </div>
-        {% if user_profile == request.user %}
-            <p></p>
-        {% else %}
-            <div class="author-subscribe" data-author="{{ user_profile }}">
-            {% if user_profile|is_subscribe:user %}
-                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></p>
+        {% if user.is_authenticated %}
+            {% if user_profile == user %}
+                <p></p>
             {% else %}
-                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                <div class="author-subscribe" data-author="{{ user_profile.id }}">
+                {% if user_profile|is_subscribe:user %}
+                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></p>
+                {% else %}
+                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                {% endif %}
+                </div>
             {% endif %}
-            </div>
         {% endif %}
         <div class="card-list">
             {% for recipe in page %}

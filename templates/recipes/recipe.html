@@ -10,7 +10,8 @@
 {% block content %}
 
     <main class="main container">
-        <div class="single-card" data-id="{{ recipe.id }}" data-author="{{ recipe.author }}">
+        {% csrf_token %}
+        <div class="single-card" data-id="{{ recipe.id }}" data-author="{{ recipe.author.id }}">
             {% load thumbnail %}
                 {% thumbnail recipe.image "522x579" crop="center" upscale=True as im %}
                 <a href="{% url 'recipe' recipe_id=recipe.id %}" class="link" target="_blank"><img src="{{ im.url }}" alt="Нет изображения" class="card__image"></a>
@@ -18,7 +19,8 @@
             <div class="single-card__info">
                 <div class="single-card__header-info">
                     <h1 class="single-card__title"> {{ recipe.title }}</h1>
-                    <div class="single-card__favorite">
+                    {% if user.is_authenticated %}
+                        <div class="single-card__favorite">
                         {% if recipe|is_favorite:user %}
                             <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_big icon-favorite_active"></span></button>
                             <div class="single-card__favorite-tooltip tooltip">Удалить из избранное</div>
@@ -26,7 +28,8 @@
                             <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
                             <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
                         {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <ul class="single-card__items">
                     {% for tag in recipe.tags.all %}
@@ -40,9 +43,10 @@
                         <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
                     </ul>
                 </div>
+                {% if user.is_authenticated %}
                 <ul class="single-card__items">
                     {% if recipe|is_purchase:user %}
-                        <li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchpurchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button></li>
+                        <li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button></li>
                     {% else %}
                         <li class="single-card__item"><button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button></li>
                     {% endif %}
@@ -52,6 +56,7 @@
                         <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
                     {% endif %}
                 </ul>
+                {% endif %}
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингредиенты:</h3>
                     <div class="single-card__items single-card__items_column">

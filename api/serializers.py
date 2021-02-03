@@ -4,10 +4,14 @@ from .models import Favorite, Follow, Purchase
 from recipes.models import Ingredient
 
 
-class FollowSerializer(serializers.ModelSerializer):
+
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ['user', 'author']
+        # fields = ['user', 'author']
+        fields = ('author', )
         model = Follow
     
     def validate(self, data):
@@ -20,14 +24,15 @@ class FollowSerializer(serializers.ModelSerializer):
 class PurchaseSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ['user', 'recipe']
+        fields = ('recipe', )
         model = Purchase
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ['user', 'recipe']
+        # fields = ['user', 'recipe']
+        fields = ('recipe', )
         model = Favorite
 
 

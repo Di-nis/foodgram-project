@@ -4,7 +4,8 @@ from .models import Ingredient, Recipe, RecipeIngredient, Tag
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ("id", "title",)
+    list_display = ("id", "title", "color")
+    # list_display = ("title", "color")
 
 
 class IngredientAdmin(admin.ModelAdmin):

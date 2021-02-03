@@ -11,6 +11,7 @@
 {% block content %}
 
 <main class="main container">
+    {% csrf_token %}
     <div class="main__header">
         <h1 class="main__title">Мои подписки</h1>
     </div>
@@ -37,7 +38,7 @@
                             {% endfor %}
                             {% if user.recipes.count > 3 %}
                                 <li class="card-user__item">
-                                <a href="#" class="card-user__link link">Еще {{ user.recipes.count }} рецептов...</a>
+                                <a href="{% url 'profile' id=user.id %}" class="card-user__link link">Еще {{ user.recipes.count }} рецептов...</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -57,6 +58,7 @@
 
 <script src="{% static 'js/config/config.js' %}"></script>
 <script src="{% static 'js/components/MainCards.js' %}"></script>
+<script src="{% static 'js/components/MyFollow.js' %}"></script>
 <script src="{% static 'js/components/Subscribe.js' %}"></script>
 <script src="{% static 'js/components/Header.js' %}"></script>
 <script src="{% static 'js/api/Api.js' %}"></script>

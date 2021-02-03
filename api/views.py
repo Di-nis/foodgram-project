@@ -7,7 +7,7 @@ from recipes.models import Ingredient
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from .permissions import IsStaffOrOwner
-from .serializers import (FollowSerializer, 
+from .serializers import (SubscriptionSerializer, 
                           PurchaseSerializer, 
                           FavoriteSerializer,
                           IngredientSerializer)
@@ -27,42 +27,32 @@ class BaseCreateListDestroyViewSet(
 class PurchasesViewSet(BaseCreateListDestroyViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
     # filter_backends = [filters.SearchFilter]
-    permission_classes = [IsStaffOrOwner, ]
+    # permission_classes = [IsStaffOrOwner, ]
     # search_fields = ['=name', ]
-    # lookup_field = 'slug'
+    lookup_field = 'recipe__id'
 
 
 
 class SubscriptionsViewSet(CreateModelMixin, DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
+    serializer_class = SubscriptionSerializer
     # filter_backends = [filters.SearchFilter]
-    permission_classes = [IsStaffOrOwner, ]
+    permission_classes = (permissions.IsAuthenticated, )
+    # permission_classes = [IsStaffOrOwner, ]
     # search_fields = ['=name', ]
-    # lookup_field = 'slug'
-    # renderer_classes = [TemplateHTMLRenderer]
-    # template_name = 'recipes/MyFollow.html'
-
-    # def get(self, request):
-    #     user_list = User.objects.filter(following__user=request.user)
-    #     paginator = Paginator(user_list, 3)
-    #     page_number = request.GET.get('page')
-    #     page = paginator.get_page(page_number)
-    #     return Response({
-    #         'page': page,
-    #         'paginator': paginator
-    #         }
-    #     )
+    lookup_field = 'author'
 
 
 class FavoritesViewSet(CreateModelMixin, DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
     # # filter_backends = [filters.SearchFilter]
     # permission_classes = [IsStaffOrOwner, ]
     # # search_fields = ['=name', ]
-    # # lookup_field = 'slug'
+    lookup_field = 'recipe'
 
 
 class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
@@ -70,4 +60,5 @@ class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
     serializer_class = IngredientSerializer
     filter_backends = [filters.SearchFilter]
     permission_classes = [permissions.AllowAny, ]
-    search_fields = ['name', ]
+    # search_fields = ['name', ]
+    # filterset_fields = ['text',]
