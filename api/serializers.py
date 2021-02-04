@@ -5,6 +5,10 @@ from recipes.models import Ingredient
 
 
 
+# class CustomModelSerializer(serializers.ModelSerializer):
+#     def create(self, validated_data):
+#         validated_data['user'] = self.context['request'].user
+#         return self.Meta.model.objects.create(**validated_data)
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
@@ -14,11 +18,15 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = ('author', )
         model = Follow
     
-    def validate(self, data):
-        if data['user'] == data['author']:
-            raise serializers.ValidationError(
-                "Вы не можете подписаться на самого себя")
-        return data
+    # def validate(self, data):
+    #     print(self.context['request'].user)
+    #     return data
+    #     print('печать', data)
+    #     print(data['author'])
+    #     if data['user'] == data['author']:
+    #         raise serializers.ValidationError(
+    #             "Вы не можете подписаться на самого себя")
+    #     return data
 
 
 class PurchaseSerializer(serializers.ModelSerializer):

@@ -31,7 +31,7 @@ class PurchasesViewSet(BaseCreateListDestroyViewSet):
     # filter_backends = [filters.SearchFilter]
     # permission_classes = [IsStaffOrOwner, ]
     # search_fields = ['=name', ]
-    lookup_field = 'recipe__id'
+    lookup_field = 'recipe_id'
 
 
 
@@ -40,6 +40,7 @@ class SubscriptionsViewSet(CreateModelMixin, DestroyModelMixin, viewsets.Generic
     serializer_class = SubscriptionSerializer
     # filter_backends = [filters.SearchFilter]
     permission_classes = (permissions.IsAuthenticated, )
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
     # permission_classes = [IsStaffOrOwner, ]
     # search_fields = ['=name', ]
     lookup_field = 'author'

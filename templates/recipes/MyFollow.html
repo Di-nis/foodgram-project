@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load recipe_filters %}
 
 {% block title %}Мои подписки{% endblock %}
 
@@ -16,15 +17,15 @@
         <h1 class="main__title">Мои подписки</h1>
     </div>
     <div class="card-list">
-        {% for user in page %}
-            {% if user.recipes.exists %}
-                <div class="card-user" data-author="{{ user.id }}">
+        {% for author in page %}
+            {% if author.recipes.exists %}
+                <div class="card-user" data-author="{{ author.id }}">
                     <div class="card-user__header">
-                        <h2 class="card-user__title">{{ user.get_full_name }}</h2>
+                        <h2 class="card-user__title">{{ author.get_full_name }}</h2>
                     </div>
                     <div class="card-user__body">
                         <ul class="card-user__items">
-                            {% for recipe in user.recipes.all %}
+                            {% for recipe in author.recipes.all %}
                             <li class="card-user__item">
                                 <div class="recipe">
                                     {% load thumbnail %}
@@ -36,15 +37,19 @@
                                 </div>
                             </li>
                             {% endfor %}
-                            {% if user.recipes.count > 3 %}
+                            {% if author.recipes.count > 3 %}
                                 <li class="card-user__item">
-                                <a href="{% url 'profile' id=user.id %}" class="card-user__link link">Еще {{ user.recipes.count }} рецептов...</a>
+                                <a href="{% url 'profile' id=author.id %}" class="card-user__link link">Еще {{ author.recipes.count }} рецептов...</a>
                                 </li>
                             {% endif %}
                         </ul>
                     </div>
                     <div class="card-user__footer">
-                        <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                        {% if author|is_subscribe:user %}
+                            <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                        {% else %}
+                            <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
