@@ -3,10 +3,8 @@ from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin)
 from django.contrib.auth import get_user_model
 from .models import Follow, Purchase, Favorite
-from recipes.models import Ingredient
-from rest_framework.renderers import TemplateHTMLRenderer
+from recipes.models import Ingredient, RecipeIngredient
 from rest_framework.response import Response
-from .permissions import IsStaffOrOwner
 from .serializers import (SubscriptionSerializer, 
                           PurchaseSerializer, 
                           FavoriteSerializer,
@@ -29,7 +27,6 @@ class PurchasesViewSet(BaseCreateListDestroyViewSet):
     serializer_class = PurchaseSerializer
     permission_classes = [permissions.IsAuthenticated, ]
     # filter_backends = [filters.SearchFilter]
-    # permission_classes = [IsStaffOrOwner, ]
     # search_fields = ['=name', ]
     lookup_field = 'recipe_id'
 
@@ -41,7 +38,6 @@ class SubscriptionsViewSet(CreateModelMixin, DestroyModelMixin, viewsets.Generic
     # filter_backends = [filters.SearchFilter]
     permission_classes = (permissions.IsAuthenticated, )
     # authentication_classes = (CsrfExemptSessionAuthentication, )
-    # permission_classes = [IsStaffOrOwner, ]
     # search_fields = ['=name', ]
     lookup_field = 'author'
 
@@ -50,16 +46,15 @@ class FavoritesViewSet(CreateModelMixin, DestroyModelMixin, viewsets.GenericView
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated, ]
-    # # filter_backends = [filters.SearchFilter]
-    # permission_classes = [IsStaffOrOwner, ]
     # # search_fields = ['=name', ]
     lookup_field = 'recipe'
 
 
 class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
     queryset = Ingredient.objects.all()
+    # queryset = RecipeIngredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = [filters.SearchFilter]
     permission_classes = [permissions.AllowAny, ]
-    # search_fields = ['name', ]
-    # filterset_fields = ['text',]
+    search_fields = ['name', ]
+    # filterset_fields = ['name',]

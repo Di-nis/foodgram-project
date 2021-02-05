@@ -5,10 +5,12 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from excel_response import ExcelResponse
 
-from .forms import IngredientForm, RecipeForm
+from .forms import RecipeForm
 from .models import Recipe, Tag
 from .utils import make_doc
+import io
 from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 User = get_user_model()
 TAGS = ['breakfast', 'lunch', 'dinner']
@@ -95,16 +97,17 @@ def recipe_edit(request, recipe_id):
             'recipe': recipe,
             }
         )
-    return redirect('index')
+    # return redirect('index')
 
 
 @login_required
 def favorite_recipes(request):
     recipe_list = Recipe.objects.filter(
         favorite__user=request.user)
-    tag_list = Tag.objects.filter(
-        recipes__in=Recipe.objects.filter(
-            favorite__user=request.user))
+    # tag_list = Tag.objects.filter(
+    #     recipes__in=Recipe.objects.filter(
+    #         favorite__user=request.user))
+    tag_list = Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -153,7 +156,8 @@ def new_ingredient(request):
 
 @login_required
 def follow_index(request):
-    user_list = User.objects.filter(following__user=request.user)
+    user_list = User.objects.filter(
+        following__user=request.user)
     paginator = Paginator(user_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -164,8 +168,40 @@ def follow_index(request):
     )
 
 
-def download(make_doc):
-    return FileResponse(make_doc, as_attachment=True, filename='Shop_list.pdf')
+def tag_filter(request, display_name):
+    recipe_list = Recipe.objects.filter(
+        tags__display_name=display_name)
+    tag_list = Tag.objects.all()
+    paginator = Paginator(recipe_list, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'recipes/recipes_filter.html', {
+        'page': page,
+        'paginator': paginator,
+        'tag_list': tag_list,
+        'display_name': display_name
+        }
+    )
+
+def download(request):
+        # Create a file-like buffer to receive PDF data.
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Hello world.")
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='Shop_list.pdf')
 
 
 def page_not_found(request, exception):

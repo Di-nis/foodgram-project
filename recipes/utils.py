@@ -2,7 +2,7 @@ import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
 
-def make_doc(request):
+def make_doc():
     # Create a file-like buffer to receive PDF data.
     buffer = io.BytesIO()
 

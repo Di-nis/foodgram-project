@@ -1,51 +1,48 @@
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 
 from .models import Favorite, Follow, Purchase
-from recipes.models import Ingredient
+from recipes.models import Ingredient, RecipeIngredient
 
 
 
-# class CustomModelSerializer(serializers.ModelSerializer):
-#     def create(self, validated_data):
-#         validated_data['user'] = self.context['request'].user
-#         return self.Meta.model.objects.create(**validated_data)
+class CustomSerializers(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
 
 
-class SubscriptionSerializer(serializers.ModelSerializer):
+class SubscriptionSerializer(CustomSerializers):
 
     class Meta:
-        # fields = ['user', 'author']
-        fields = ('author', )
+        fields = ['user', 'author']
         model = Follow
     
-    # def validate(self, data):
-    #     print(self.context['request'].user)
-    #     return data
-    #     print('печать', data)
-    #     print(data['author'])
-    #     if data['user'] == data['author']:
-    #         raise serializers.ValidationError(
-    #             "Вы не можете подписаться на самого себя")
-    #     return data
+    def validate(self, data):
+        if data['user'] == data['author']:
+            raise serializers.ValidationError(
+                "Вы не можете подписаться на самого себя")
+        return data
 
 
-class PurchaseSerializer(serializers.ModelSerializer):
+class PurchaseSerializer(CustomSerializers):
 
     class Meta:
-        fields = ('recipe', )
+        fields = ['user', 'recipe']
         model = Purchase
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(CustomSerializers):
 
     class Meta:
-        # fields = ['user', 'recipe']
-        fields = ('recipe', )
+        fields = ['user', 'recipe']
         model = Favorite
 
 
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ['name', 'dimension']
+        # fields = ['name', 'dimension']
+        fields = '__all__'
         model = Ingredient
+        # model = RecipeIngredient

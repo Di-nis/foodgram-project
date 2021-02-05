@@ -12,6 +12,7 @@
 {% block content %}
 
     <main class="main container">
+        {% csrf_token %}
         <div class="main__header">
             <h1 class="main__title">Избранное</h1>
             {% include "includes/card_tag.html" %}

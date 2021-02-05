@@ -48,13 +48,17 @@
                         {% if author|is_subscribe:user %}
                             <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
                         {% else %}
-                            <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button>
+                            <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться</button>
                         {% endif %}
                     </div>
                 </div>
             {% endif %}
         {% endfor %}
     </div>
+
+    {% if page.has_other_pages %}
+        {% include "includes/paginator.html" with items=page paginator=paginator %}
+{% endif %}
 </main>
 
 {% endblock %}

@@ -26,7 +26,6 @@ class Tag(models.Model):
     )
     color = models.CharField(
         'Цвет тега',
-        # primary_key=True,
         max_length=20,
     )
 
@@ -114,16 +113,6 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    # MEASURE_CHOICES = (
-    #     ('г.', 'г.'),
-    #     ('стакан', 'стакан'),
-    #     ('кусок', 'кусок'),
-    #     ('шт.', 'шт.'),
-    #     ('по вкусу', 'по вкусу'), 
-    #     ('ст.л.', 'ст.л.'),
-    #     ('ч.л.', 'ч.л.'),
-    #     ('мл.', 'мл.'),
-    # )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
@@ -143,12 +132,6 @@ class RecipeIngredient(models.Model):
         blank=True,
         null=True,
     )
-    # measure = models.CharField(
-    #     max_length=20,
-    #     choices=MEASURE_CHOICES,
-    #     default=None,
-    #     verbose_name = 'Единица измерения'
-    # )
 
     def __str__(self):
         return '{} {}'.format(
