@@ -5,7 +5,6 @@ from .models import Ingredient, Recipe, RecipeIngredient, Tag
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "display_name", "color")
-    # list_display = ("title", "color")
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -21,7 +20,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ("id", "ingredient", "recipe", "amount")
-    # list_filter = ("author", "name",)
+    search_fields = ("ingredient__name", "recipe__title")
 
 
 

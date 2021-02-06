@@ -1,8 +1,8 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (FavoritesViewSet, SubscriptionsViewSet,
-                    PurchasesViewSet, IngredientsViewSet)
+from .views import (FavoritesViewSet, IngredientsViewSet, PurchasesViewSet,
+                    SubscriptionsViewSet)
 
 v1_router = DefaultRouter()
 v1_router.register('subscriptions', SubscriptionsViewSet, basename='subscriptions')

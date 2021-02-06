@@ -1,8 +1,7 @@
-from django.db import models
 from django import forms
-# from django.forms import ModelForm
+from django.db import models
 
-from .models import Ingredient, Recipe
+from .models import Recipe
 
 
 class RecipeForm(forms.ModelForm):
@@ -13,9 +12,3 @@ class RecipeForm(forms.ModelForm):
         widgets = {
             'tags': forms.CheckboxSelectMultiple()
         }
-
-
-# class IngredientForm(ModelForm):
-#     class Meta:
-#         model = Ingredient
-#         fields = '__all__'

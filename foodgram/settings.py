@@ -5,12 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = os.getenv('SECRET_KEY', 'django key must be set!')
-# SECRET_KEY = 'ndt#xou*bi-g052)q&wowp_ytc20g+)@^gc1$yoii#na#48vc-'
 
 DEBUG = True
 # DEBUG = False
@@ -102,22 +99,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # }
 
 REST_FRAMEWORK = {        
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated', 
-    # ],
-    
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    # 'PAGE_SIZE': 5,
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    # )
 } 
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -136,11 +122,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# AUTH_USER_MODEL = 'users.User'
-
 LANGUAGE_CODE = 'ru'
 
-# TIME_ZONE = 'UTC'
 TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
@@ -167,8 +150,5 @@ CORS_URLS_REGEX = r'^/api/.*$'
 
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "index"
-# LOGOUT_REDIRECT_URL = "index"
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-
-# APPEND_SLASH = False

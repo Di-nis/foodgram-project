@@ -1,7 +1,7 @@
-# Foodgram-project
+# Foodgram
 
 ## Описание
-<!-- REST API-сервис YaMDb_final - базы отзывов о фильмах, книгах и музыке. -->
+Foodgram - сервис для хранения рецептов
 
 ## Развертывание
 * IP-адрес сервера:
@@ -21,17 +21,17 @@
 * Сбор статических файлов:
     - python manage.py collectstatic
 
-## Workflow-статус
-<!-- ![Yamdb_final_workflow](https://github.com/Di-nis/yamdb_final/workflows/Yamdb_final_workflow/badge.svg) -->
 
 ## Создано с помощью
+* [Python](https://www.python.org/)
 * [Django](https://docs.djangoproject.com/en/3.1/) - Python веб фреймворк
 * [Django REST framework](https://www.django-rest-framework.org/) - 
 Библиотека для создания REST-сервисов на основе Django
+* [JavaScript](https://www.javascript.com/)
 
 ## Авторы, контактная информация
 * **Денис Смирнов** - *разработчик* - (https://github.com/Di-nis)
 Электронная почта - di-nis@yandex.ru
 
 ## Благодарности
-<!-- Спасибо всей команде Яндекс.Практикум за терпение, помощь и трепетное отношение в реализации этого учебного задания. -->
+Спасибо всей команде Яндекс.Практикум за терпение, помощь и трепетное отношение в реализации этого учебного задания.

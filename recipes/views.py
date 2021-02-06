@@ -1,26 +1,16 @@
-import pandas as pd
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from excel_response import ExcelResponse
 
 from .forms import RecipeForm
-from .models import Recipe, Tag
-from .utils import make_doc
-import io
-from django.http import FileResponse
-from reportlab.pdfgen import canvas
+from .models import Recipe, RecipeIngredient, Tag
 
 User = get_user_model()
 TAGS = ['breakfast', 'lunch', 'dinner']
 
 def index(request):
     recipe_list = Recipe.objects.all()
-    tags = request.GET.getlist('tag', TAGS)
-    print('Тест', request.GET.getlist)
-    print(tags)
-    # tag_list=Tag.objects.prefetch_related('recipes')
     tag_list=Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
@@ -32,11 +22,10 @@ def index(request):
         }
     )
 
-# def profile(request, username):
 def profile(request, id):
-    # user_profile = get_object_or_404(User, username=username)
     user_profile = get_object_or_404(User, id=id)
     recipes = user_profile.recipes.all()
+    tag_list=Tag.objects.all()
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -44,6 +33,7 @@ def profile(request, id):
         'page': page,
         'paginator': paginator,
         'user_profile': user_profile,
+        'tag_list': tag_list
         }
     )
 
@@ -59,13 +49,13 @@ def new_recipe(request):
         return render(
             request, 'recipes/new_recipe.html', {
                 'form': form,
-                'is_created': True,
+                # 'is_created': True,
             }
         )
     form = RecipeForm()
     return render(request, 'recipes/new_recipe.html', {
         'form': form,
-        'is_created': True,
+        # 'is_created': True,
         }
     )
 
@@ -76,6 +66,14 @@ def recipe(request, recipe_id):
         'recipe': recipe,
         }
     )
+
+
+@login_required
+def recipe_delete(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    if recipe.author == request.user:
+        Recipe.objects.get(id=recipe_id).delete()
+        return redirect('index')
 
 
 @login_required
@@ -95,6 +93,7 @@ def recipe_edit(request, recipe_id):
         return render(request, 'recipes/new_recipe.html', {
             'form': form,
             'recipe': recipe,
+            'is_created': True,
             }
         )
     # return redirect('index')
@@ -104,9 +103,6 @@ def recipe_edit(request, recipe_id):
 def favorite_recipes(request):
     recipe_list = Recipe.objects.filter(
         favorite__user=request.user)
-    # tag_list = Tag.objects.filter(
-    #     recipes__in=Recipe.objects.filter(
-    #         favorite__user=request.user))
     tag_list = Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
@@ -121,7 +117,9 @@ def favorite_recipes(request):
 
 @login_required
 def shop_list(request):
-    recipe_list = Recipe.objects.filter(purchase__user=request.user)
+    recipe_list = Recipe.objects.filter(
+        purchase__user=request.user
+    )
     paginator = Paginator(recipe_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -157,7 +155,7 @@ def new_ingredient(request):
 @login_required
 def follow_index(request):
     user_list = User.objects.filter(
-        following__user=request.user)
+        following__user=request.user).order_by('id')
     paginator = Paginator(user_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -184,24 +182,22 @@ def tag_filter(request, display_name):
     )
 
 def download(request):
-        # Create a file-like buffer to receive PDF data.
-    buffer = io.BytesIO()
+    ingredients = RecipeIngredient.objects.filter(
+        recipe__in=Recipe.objects.filter(
+            purchase__user=request.user
+        )
+    )
+    purchases_list = {}
 
-    # Create the PDF object, using the buffer as its "file."
-    p = canvas.Canvas(buffer)
+    for res in result:
+        purchases[res.ingredient.name] = [0, res.ingredient.dimension]
 
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 100, "Hello world.")
+    for res in ingredients:
+        purchases[res.ingredient.name][0] += res.amount
 
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
+    pass
 
-    # FileResponse sets the Content-Disposition header so that browsers
-    # present the option to save the file.
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='Shop_list.pdf')
+    # return FileResponse(buffer, as_attachment=True, filename='Shop_list.pdf')
 
 
 def page_not_found(request, exception):

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{% if is_created %}Создание рецепта{% else %}Редактирование рецепта{% endif %}{% endblock %}
+{% block title %}{% if is_created %}Редактирование рецепта{% else %}Создание рецепта{% endif %}{% endblock %}
 
 {% block css_block %}
     <link rel="stylesheet" href="{% static 'css/pages/form.css' %}">
@@ -10,13 +10,13 @@
 
 <main class="main container">
     <div class="main__header">
-        <h1 class="main__title">{% if is_created %}Создание рецепта{% else %}Редактирование рецепта{% endif %}</h1>
+        <h1 class="main__title">{% if is_created %}Редактирование рецепта{% else %}Создание рецепта{% endif %}</h1>
     </div>
     <div class="form-container">
         {% if is_created %}
-            <form class="form" method="post" enctype="multipart/form-data" action="{% url 'new_recipe' %}">
-        {% else %}
             <form class="form" method="post" enctype="multipart/form-data" action="{% url 'recipe_edit' recipe_id=recipe.id %}">
+        {% else %}
+            <form class="form" method="post" enctype="multipart/form-data" action="{% url 'new_recipe' %}">
         {% endif %}
         {% csrf_token %}
             {% for field in form %}
@@ -48,7 +48,8 @@
                     <div class="form__field-group">
                         <div class="form__field-group-ingredientes">
                             <div class="form__dropdown">
-                                <input type="{{ field.widget_type }}" id="{{ field.id_for_label }}" class="form__input">
+                                <input type="text" id="nameIngredient" class="form__input">
+                                <!-- <input type="{{ field.widget_type }}" id="{{ field.id_for_label }}" class="form__input"> -->
                                 <div class="form__dropdown-items"></div>
                             </div>
                             <input type="number" id="cantidad" class="form__input">
@@ -56,13 +57,13 @@
                         </div>
                         {% if is_created %}
                         <div class="form__field-group-ingredientes-container">
-                            {% for ingredient in recipe %}
+                            {% for ingredient in recipe.ingredients.all %}
                             <div class="form__field-item-ingredient" id="ing_{{ingredient.id }}">
-                                <span> {{ ingredient.ingredient.name }} {{ ingredient.amount }} {{ ingredient.ingredient.dimension }}</span>
+                                <span> {{ ingredient.name }} {{ recipe.ingredients_amounts.amout }} {{ ingredient.dimension }}</span>
                                 <span class="form__field-item-delete"></span>
-                                <input id="nameIngredient_{{ ingredient.id }}" name="nameIngredient_{{ ingredient.id }}" type="hidden" value="ingredient.ingredient.name">
+                                <input id="nameIngredient_{{ ingredient.id }}" name="nameIngredient_{{ ingredient.id }}" type="hidden" value="{{ ingredient.name }}">
                                 <input id="valueIngredient_{{ ingredient.id }}" name="valueIngredient_{{ ingredient.id }}" type="hidden" value="{{ ingredient.amount }}">
-                                <input id="unitsIngredient_{{ ingredient.id }}" name="unitsIngredient_{{ ingredient.id }}" type="hidden" value="{{ ingredient.ingredient.dimension }}">
+                                <input id="unitsIngredient_{{ ingredient.id }}" name="unitsIngredient_{{ ingredient.id }}" type="hidden" value="{{ ingredient.dimension }}">
                             </div>
                             {% endfor %}
                         </div>
@@ -93,10 +94,10 @@
             {% endfor %}
             <div class="form__footer">
                 {% if is_created %}
-                    <button type="submit" class="button button_style_blue">Создать рецепт</button>
-                {% else %}
                     <button type="submit" class="button button_style_blue">Сохранить</button>
-                    <a style="margin-left: 2.5em" href="#" class="form__ingredient-link">Удалить</a>
+                    <a style="margin-left: 2.5em" href="{% url 'recipe_delete' recipe_id=recipe.id %}" class="form__ingredient-link">Удалить</a>
+                {% else %}
+                    <button type="submit" class="button button_style_blue">Создать рецепт</button>
                 {% endif %}
             </div>
         </form>

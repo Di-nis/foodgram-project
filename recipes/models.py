@@ -3,8 +3,6 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 
-# from users.models import User
-
 User = get_user_model()
 
 
@@ -92,12 +90,6 @@ class Recipe(models.Model):
         "Дата публикации",
         auto_now_add=True
     )
-    # slug = models.SlugField(
-    #     'Уникальный URL',
-    #     unique=True,
-    #     blank=True,
-    #     null=True,
-    # )
     slug = AutoSlugField(
         populate_from='title',
         allow_unicode=True
@@ -122,12 +114,11 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredients_amounts'
+        related_name='ingredients_amounts',
+        verbose_name='Рецепт'
     )
-    amount = models.DecimalField(
+    amount = models.FloatField(
         "Количество",
-        max_digits=5,
-        decimal_places=1,
         validators=[MinValueValidator(0)],
         blank=True,
         null=True,
@@ -140,6 +131,3 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент (рецепт)'
         verbose_name_plural = 'Ингредиенты (рецепт)'
-
-
-

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Успешая регистрация{% endblock %}
+
+{% block css_block %}
+    <link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="main container">
+    <div class="custom-center-block">
+        <p class="custom-text-block">Вы успешно зарегистрировалсь</p>
+        <div class="custom-button-block">
+            <button class="button button_style_blue">
+                <a href="{% url 'login' %}" class="button button_style_blue">Войти на сайт</a>
+            </button>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
-from .models import Favorite, Follow, Purchase
 from recipes.models import Ingredient, RecipeIngredient
 
+from .models import Favorite, Follow, Purchase
 
 
 class CustomSerializers(serializers.ModelSerializer):

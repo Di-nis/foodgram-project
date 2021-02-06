@@ -6,6 +6,7 @@ extra_patterns_recipe = [
     path("new/", views.new_recipe, name='new_recipe'),
     path("<int:recipe_id>/", views.recipe, name='recipe'),
     path("<int:recipe_id>/edit/", views.recipe_edit, name='recipe_edit'),
+    path("<int:recipe_id>/delete/", views.recipe_delete, name='recipe_delete'),
 ]
 
 extra_patterns_my = [

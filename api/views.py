@@ -1,15 +1,14 @@
+from django.contrib.auth import get_user_model
 from rest_framework import filters, permissions, viewsets
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin)
-from django.contrib.auth import get_user_model
-from .models import Follow, Purchase, Favorite
-from recipes.models import Ingredient, RecipeIngredient
 from rest_framework.response import Response
-from .serializers import (SubscriptionSerializer, 
-                          PurchaseSerializer, 
-                          FavoriteSerializer,
-                          IngredientSerializer)
 
+from recipes.models import Ingredient, RecipeIngredient
+
+from .models import Favorite, Follow, Purchase
+from .serializers import (FavoriteSerializer, IngredientSerializer,
+                          PurchaseSerializer, SubscriptionSerializer)
 
 User = get_user_model()
 
@@ -37,7 +36,6 @@ class SubscriptionsViewSet(CreateModelMixin, DestroyModelMixin, viewsets.Generic
     serializer_class = SubscriptionSerializer
     # filter_backends = [filters.SearchFilter]
     permission_classes = (permissions.IsAuthenticated, )
-    # authentication_classes = (CsrfExemptSessionAuthentication, )
     # search_fields = ['=name', ]
     lookup_field = 'author'
 
