@@ -14,8 +14,8 @@ urlpatterns = [
 ]
 
 
-handler404 = "recipes.views.page_not_found"
-handler500 = "recipes.views.server_error"
+handler404 = "recipes.views.page_not_found" # noqa
+handler500 = "recipes.views.server_error" # noqa
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

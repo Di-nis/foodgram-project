@@ -73,7 +73,6 @@ def recipe(request, recipe_id):
 @login_required
 def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    form = RecipeForm(instance=recipe)
     if recipe.author == request.user:
         form_edited = RecipeForm(request.POST or None,
                                  files=request.FILES or None,

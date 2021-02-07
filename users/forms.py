@@ -5,11 +5,12 @@ from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
+
 class CreationForm(UserCreationForm):
     email = forms.EmailField(required=True,
                              label=_("Электронная почта"),
                              help_text=_("Введите адрес электронной почты"),
-    )
+                             )
 
     class Meta(UserCreationForm.Meta):
         model = User
