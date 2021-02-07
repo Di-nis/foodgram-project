@@ -9,7 +9,7 @@ class TagAdmin(admin.ModelAdmin):
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "dimension")
-    list_filter = ("name",)
+    list_filter = ("name", )
     search_fields = ("name", )
 
 

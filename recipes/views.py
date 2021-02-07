@@ -7,7 +7,7 @@ from .forms import RecipeForm
 from .models import Recipe, RecipeIngredient, Tag
 
 User = get_user_model()
-TAGS = ['breakfast', 'lunch', 'dinner']
+
 
 def index(request):
     recipe_list = Recipe.objects.all()
@@ -22,8 +22,8 @@ def index(request):
         }
     )
 
-def profile(request, id):
-    user_profile = get_object_or_404(User, id=id)
+def profile(request, username):
+    user_profile = get_object_or_404(User, username=username)
     recipes = user_profile.recipes.all()
     tag_list=Tag.objects.all()
     paginator = Paginator(recipes, 6)
@@ -40,7 +40,9 @@ def profile(request, id):
 @login_required
 def new_recipe(request):
     if request.method == 'POST':
-        form = RecipeForm(request.POST, files=request.FILES or None)
+        form = RecipeForm(request.POST,
+                         files=request.FILES or None
+        )
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
@@ -49,13 +51,11 @@ def new_recipe(request):
         return render(
             request, 'recipes/new_recipe.html', {
                 'form': form,
-                # 'is_created': True,
             }
         )
     form = RecipeForm()
     return render(request, 'recipes/new_recipe.html', {
         'form': form,
-        # 'is_created': True,
         }
     )
 
@@ -69,40 +69,38 @@ def recipe(request, recipe_id):
 
 
 @login_required
-def recipe_delete(request, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
-    if recipe.author == request.user:
-        Recipe.objects.get(id=recipe_id).delete()
-        return redirect('index')
-
-
-@login_required
 def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     form = RecipeForm(instance=recipe)
     if recipe.author == request.user:
-        form_edited = RecipeForm(
-            request.POST or None,
-            files=request.FILES or None,
-            instance=recipe
+        form_edited = RecipeForm(request.POST or None,
+                                files=request.FILES or None,
+                                instance=recipe
         )
         if form_edited.is_valid():
             form_edited.save()
             return redirect('recipe',
                             recipe_id=recipe.id)
         return render(request, 'recipes/new_recipe.html', {
-            'form': form,
+            'form': form_edited,
             'recipe': recipe,
-            'is_created': True,
             }
         )
-    # return redirect('index')
+    return redirect('index')
 
+
+@login_required
+def recipe_delete(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    if recipe.author == request.user:
+        Recipe.objects.get(id=recipe_id).delete()
+        return redirect('index')
 
 @login_required
 def favorite_recipes(request):
     recipe_list = Recipe.objects.filter(
-        favorite__user=request.user)
+        favorite__user=request.user
+    )
     tag_list = Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
@@ -126,28 +124,6 @@ def shop_list(request):
     return render(request, 'recipes/shop_list.html', {
         'page': page,
         'paginator': paginator
-        }
-    )
-
-@login_required
-def new_ingredient(request):
-    if request.method == 'POST':
-        form = IngredientForm(request.POST)
-        if form.is_valid():
-            recipe = form.save(commit=False)
-            # recipe.author = request.user
-            recipe.save()
-            return redirect('index')
-        return render(
-            request, 'recipes/new_recipe.html', {
-                'form_ingredient': form,
-                # 'is_created': True,
-            }
-        )
-    form = RecipeForm()
-    return render(request, 'recipes/new_recipe.html', {
-        'form_ingredient': form,
-        # 'is_created': True,
         }
     )
 
@@ -181,6 +157,7 @@ def tag_filter(request, display_name):
         }
     )
 
+@login_required
 def download(request):
     ingredients = RecipeIngredient.objects.filter(
         recipe__in=Recipe.objects.filter(
@@ -195,7 +172,10 @@ def download(request):
     for res in ingredients:
         purchases[res.ingredient.name][0] += res.amount
 
-    pass
+    content = '\n'.join(products)
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
 
     # return FileResponse(buffer, as_attachment=True, filename='Shop_list.pdf')
 
@@ -211,3 +191,19 @@ def page_not_found(request, exception):
 
 def server_error(request):
     return render(request, "misc/500.html", status=500) 
+
+
+    # user = request.user
+    # filename = f'{user.username}_list.txt'
+    # recipes = Purchase.purchase.get_purchases_list(user).values(
+    #     'ingredients__name', 'ingredients__unit'
+    # )
+    # ingredients = recipes.annotate(Sum('recipeingredient__amount')).order_by()
+    # products = [
+    #     (f'{i["ingredients__name"]} -'
+    #      f' {i["recipeingredient__amount__sum"]} {i["ingredients__unit"]}')
+    #     for i in ingredients]
+    # content = '\n'.join(products)
+    # response = HttpResponse(content, content_type='text/plain')
+    # response['Content-Disposition'] = f'attachment; filename={filename}'
+    # return response

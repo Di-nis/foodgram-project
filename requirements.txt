@@ -1,6 +1,5 @@
 asgiref==3.3.1
 Django==3.1.5
-django-autoslug==1.9.8
 django-cors-headers==3.7.0
 djangorestframework==3.12.2
 et-xmlfile==1.0.1

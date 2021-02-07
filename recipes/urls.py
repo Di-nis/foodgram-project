@@ -23,6 +23,5 @@ urlpatterns = [
     path("?tags=<str:display_name>/", views.tag_filter, name="tag_filter"),
     path("recipe/", include(extra_patterns_recipe)),
     path("my/", include(extra_patterns_my)),
-    # path("<str:username>/", views.profile, name='profile'),
-    path("users/<int:id>/", views.profile, name='profile'),
+    path("<str:username>/", views.profile, name='profile'),
 ]

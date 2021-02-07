@@ -20,3 +20,8 @@ def is_subscribe(author, user):
 @register.filter(name='is_not_user')
 def is_not_user(user_profile, user):
         return user_profile is not request.user
+
+
+@register.filter(name='addclass')
+def addclass(field, css):
+    return field.as_widget(attrs={'class': css})

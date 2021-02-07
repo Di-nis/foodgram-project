@@ -25,8 +25,6 @@ class PurchasesViewSet(BaseCreateListDestroyViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
     permission_classes = [permissions.IsAuthenticated, ]
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ['=name', ]
     lookup_field = 'recipe_id'
 
 
