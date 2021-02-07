@@ -67,12 +67,12 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
         related_name='recipes',
-        verbose_name = 'Теги',
+        verbose_name='Теги',
     )
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
-        verbose_name = 'Инградиент'
+        verbose_name='Инградиент'
     )
     prep_time = models.PositiveSmallIntegerField(
         'Время приготовления',
@@ -89,7 +89,6 @@ class Recipe(models.Model):
         "Дата публикации",
         auto_now_add=True
     )
-
 
     def __str__(self):
         return '{}'.format(self.title)

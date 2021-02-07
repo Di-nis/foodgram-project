@@ -6,7 +6,6 @@ from recipes.models import Recipe
 User = get_user_model()
 
 
-
 class Follow(models.Model):
     user = models.ForeignKey(
         User,

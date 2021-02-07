@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import RecipeForm
@@ -11,7 +12,7 @@ User = get_user_model()
 
 def index(request):
     recipe_list = Recipe.objects.all()
-    tag_list=Tag.objects.all()
+    tag_list = Tag.objects.all()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -22,10 +23,11 @@ def index(request):
         }
     )
 
+
 def profile(request, username):
     user_profile = get_object_or_404(User, username=username)
     recipes = user_profile.recipes.all()
-    tag_list=Tag.objects.all()
+    tag_list = Tag.objects.all()
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -37,12 +39,12 @@ def profile(request, username):
         }
     )
 
+
 @login_required
 def new_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST,
-                         files=request.FILES or None
-        )
+                          files=request.FILES or None)
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
@@ -74,9 +76,8 @@ def recipe_edit(request, recipe_id):
     form = RecipeForm(instance=recipe)
     if recipe.author == request.user:
         form_edited = RecipeForm(request.POST or None,
-                                files=request.FILES or None,
-                                instance=recipe
-        )
+                                 files=request.FILES or None,
+                                 instance=recipe)
         if form_edited.is_valid():
             form_edited.save()
             return redirect('recipe',
@@ -95,6 +96,7 @@ def recipe_delete(request, recipe_id):
     if recipe.author == request.user:
         Recipe.objects.get(id=recipe_id).delete()
         return redirect('index')
+
 
 @login_required
 def favorite_recipes(request):
@@ -157,6 +159,7 @@ def tag_filter(request, display_name):
         }
     )
 
+
 @login_required
 def download(request):
     ingredients = RecipeIngredient.objects.filter(
@@ -164,46 +167,30 @@ def download(request):
             purchase__user=request.user
         )
     )
-    purchases_list = {}
-
-    for res in result:
-        purchases[res.ingredient.name] = [0, res.ingredient.dimension]
+    shop_list = {}
+    text_output = ''
 
     for res in ingredients:
-        purchases[res.ingredient.name][0] += res.amount
+        shop_list[res.ingredient.name] = [0, res.ingredient.dimension]
 
-    content = '\n'.join(products)
-    response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = f'attachment; filename={filename}'
+    for res in ingredients:
+        try:
+            shop_list[res.ingredient.name][0] += res.amount
+        except TypeError:
+            pass
+
+    for res in shop_list:
+        text_output += f'{res} - {shop_list[res][0]} {shop_list[res][1]}\n'
+    response = HttpResponse(text_output, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="shop_list.txt"'
     return response
-
-    # return FileResponse(buffer, as_attachment=True, filename='Shop_list.pdf')
 
 
 def page_not_found(request, exception):
-    return render(
-        request, 
-        "misc/404.html", 
-        {"path": request.path}, 
-        status=404
-    )
+    return render(request, "misc/404.html",
+                  {"path": request.path},
+                  status=404)
 
 
 def server_error(request):
-    return render(request, "misc/500.html", status=500) 
-
-
-    # user = request.user
-    # filename = f'{user.username}_list.txt'
-    # recipes = Purchase.purchase.get_purchases_list(user).values(
-    #     'ingredients__name', 'ingredients__unit'
-    # )
-    # ingredients = recipes.annotate(Sum('recipeingredient__amount')).order_by()
-    # products = [
-    #     (f'{i["ingredients__name"]} -'
-    #      f' {i["recipeingredient__amount__sum"]} {i["ingredients__unit"]}')
-    #     for i in ingredients]
-    # content = '\n'.join(products)
-    # response = HttpResponse(content, content_type='text/plain')
-    # response['Content-Disposition'] = f'attachment; filename={filename}'
-    # return response
+    return render(request, "misc/500.html", status=500)

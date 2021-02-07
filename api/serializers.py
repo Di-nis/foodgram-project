@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from rest_framework.fields import CurrentUserDefault
 
-from recipes.models import Ingredient, RecipeIngredient
+from recipes.models import Ingredient
 
 from .models import Favorite, Follow, Purchase
 
@@ -17,7 +16,7 @@ class SubscriptionSerializer(CustomSerializers):
     class Meta:
         fields = ['user', 'author']
         model = Follow
-    
+
     def validate(self, data):
         if data['user'] == data['author']:
             raise serializers.ValidationError(
@@ -42,7 +41,5 @@ class FavoriteSerializer(CustomSerializers):
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
-        # fields = ['name', 'dimension']
         fields = '__all__'
         model = Ingredient
-        # model = RecipeIngredient

@@ -23,7 +23,6 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
     search_fields = ("ingredient__name", "recipe__title")
 
 
-
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)

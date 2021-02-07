@@ -4,12 +4,10 @@ django-cors-headers==3.7.0
 djangorestframework==3.12.2
 et-xmlfile==1.0.1
 gunicorn==20.0.4
-isort==5.7.0
 jdcal==1.4.1
 openpyxl==2.4.11
 Pillow==8.1.0
 psycopg2-binary==2.8.6
-pycodestyle==2.6.0
 python-dateutil==2.8.1
 python-dotenv==0.15.0
 pytz==2020.5
