@@ -131,3 +131,4 @@ dmypy.json
 static/
 
 db.sqlite3
+send_emails/
