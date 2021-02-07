@@ -21,6 +21,9 @@ Foodgram - сервис для хранения рецептов
 * Сбор статических файлов:
     - python manage.py collectstatic
 
+## Workflow-статус
+![Foodgram_workflow](https://github.com/Di-nis/foodgram-project/workflows/Foodgram_workflow/badge.svg)
+
 
 ## Создано с помощью
 * [Python](https://www.python.org/)
