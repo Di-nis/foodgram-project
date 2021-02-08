@@ -12,7 +12,7 @@ getPurchases () {
   })
     .then( e => {
         if(e.ok) {
-            return e.json()
+            return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
@@ -28,13 +28,13 @@ addPurchases (id) {
   })
     .then( e => {
         if(e.ok) {
-            return e.json()
+            return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
 }
-removePurchases (id){
-  return fetch(`${this.apiUrl}/purchases/${id}`, {
+removePurchases (id) {
+  return fetch(`${this.apiUrl}/purchases/${id}/`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ removePurchases (id){
   })
     .then( e => {
         if(e.ok) {
-          return e.json()
+          return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
@@ -62,7 +62,7 @@ addSubscriptions(id) {
   })
     .then( e => {
         if(e.ok) {
-            return e.json()
+            return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
@@ -77,7 +77,7 @@ removeSubscriptions (id) {
   })
     .then( e => {
         if(e.ok) {
-            return e.json()
+            return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
@@ -95,13 +95,13 @@ addFavorites (id)  {
   })
       .then( e => {
           if(e.ok) {
-              return e.json()
+              return {"success": true}
           }
           return Promise.reject(e.statusText)
       })
 }
 removeFavorites (id) {
-  return fetch(`${this.apiUrl}/favorites/${id}`, {
+  return fetch(`${this.apiUrl}/favorites/${id}/`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ removeFavorites (id) {
   })
       .then( e => {
           if(e.ok) {
-              return e.json()
+              return {"success": true}
           }
           return Promise.reject(e.statusText)
       })
