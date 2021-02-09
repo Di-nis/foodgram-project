@@ -94,9 +94,8 @@ def recipe_delete(request, recipe_id):
 def favorite_recipes(request):
     search_query = request.GET.getlist("tag", TAGS)
     recipe_list = Recipe.objects.filter(
-        favorite__user=request.user
-        ).filter(
-            tags__display_name__in=search_query).dictinct()
+        favorite__user=request.user,
+        tags__display_name__in=search_query).distinct()
     paginator = Paginator(recipe_list, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
