@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import RecipeForm
-from .models import Recipe, RecipeIngredient, Tag
+from .models import Recipe, RecipeIngredient
 
 User = get_user_model()
 
@@ -49,28 +49,10 @@ def new_recipe(request):
         # recipe.save()
         return redirect("index")
     # print(form.errors)
-    return render(request, 
+    return render(request,
                   "recipes/new_recipe.html",
                   {"form": form}
-    )
-    # if request.method == "POST":
-    #     form = RecipeForm(request.POST,
-    #                       files=request.FILES or None)
-    #     if form.is_valid():
-    #         recipe = form.save(commit=False)
-    #         recipe.author = request.user
-    #         recipe.save()
-    #         return redirect("index")
-    #     return render(
-    #         request, "recipes/new_recipe.html", {
-    #             "form": form,
-    #         }
-    #     )
-    # form = RecipeForm()
-    # return render(request, "recipes/new_recipe.html", {
-    #     "form": form,
-    #     }
-    # )
+                  )
 
 
 def recipe(request, recipe_id):
