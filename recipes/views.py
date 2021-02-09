@@ -42,7 +42,7 @@ def profile(request, username):
 def new_recipe(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if form.is_valid():
-        recipe = save_recipe(request, form)
+        save_recipe(request, form)
         return redirect("index")
     return render(request,
                   "recipes/new_recipe.html",
