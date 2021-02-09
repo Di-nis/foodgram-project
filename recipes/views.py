@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import RecipeForm
 from .models import Recipe, RecipeIngredient
-from .utils import save_recipe, edit_recipe
+from .utils import edit_recipe, save_recipe
 
 User = get_user_model()
 

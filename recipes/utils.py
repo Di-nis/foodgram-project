@@ -1,7 +1,8 @@
-from .models import Ingredient, RecipeIngredient
-from django.shortcuts import get_object_or_404
+from django.db import IntegrityError, transaction
 from django.http import HttpResponseBadRequest
-from django.db import transaction, IntegrityError
+from django.shortcuts import get_object_or_404
+
+from .models import Ingredient, RecipeIngredient
 
 
 def get_ingredients(request):
