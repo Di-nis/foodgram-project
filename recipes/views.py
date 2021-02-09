@@ -80,7 +80,7 @@ def recipe_edit(request, recipe_id):
 def recipe_delete(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     if recipe.author == request.user:
-        Recipe.objects.get(id=recipe_id).delete()
+        recipe.delete()
         return redirect("index")
     return redirect("recipe", recipe_id=recipe.id)
 

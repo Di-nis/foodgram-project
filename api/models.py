@@ -84,4 +84,4 @@ class Purchase(models.Model):
         verbose_name_plural = "Рецепты (покупка)"
 
     def __str__(self):
-        return "{} - {}".format(self.user, self.recipe)
+        return "{} - {}".format(self.user.username, self.recipe.title)
