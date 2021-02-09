@@ -28,3 +28,10 @@ def is_not_user(user_profile, user):
 @register.filter(name='addclass')
 def addclass(field, css):
     return field.as_widget(attrs={'class': css})
+
+
+@register.filter(name='display_name')
+def display_name(user):
+    if user.get_full_name() == "":
+        return user.username
+    return user.get_full_name()
