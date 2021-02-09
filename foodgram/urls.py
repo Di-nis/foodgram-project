@@ -7,15 +7,14 @@ from django.urls import include, path
 urlpatterns = [
     path("auth/", include("users.urls")),
     path("auth/", include("django.contrib.auth.urls")),
-    path('admin/', admin.site.urls),
-    path('about/', include('about.urls', namespace='about')),
+    path("admin/", admin.site.urls),
+    path("about/", include("about.urls", namespace="about")),
     path("", include("recipes.urls")),
-    path('api/', include('api.urls')),
+    path("api/", include("api.urls")),
 ]
 
-
-handler404 = "recipes.views.page_not_found" # noqa
-handler500 = "recipes.views.server_error" # noqa
+handler404 = "foodgram.views.page_not_found" # noqa
+handler500 = "foodgram.views.server_error" # noqa
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

@@ -11,22 +11,26 @@ class Follow(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="follower",
-        verbose_name='Подписчик',
+        verbose_name="Подписчик",
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="following",
-        verbose_name='Подписка',
+        verbose_name="Подписка",
     )
 
-    def __str__(self):
-        return '{} - {}'.format(self.user, self.author)
-
     class Meta:
-        unique_together = ['user', 'author']
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(fields=["user", "author"],
+                                    name="unique_follow"
+                                    )
+        ]
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
+
+    def __str__(self):
+        return "{} - {}".format(self.user.username, self.author.username)
 
 
 class Favorite(models.Model):
@@ -34,22 +38,26 @@ class Favorite(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="favorite",
-        verbose_name='Пользователь'
+        verbose_name="Пользователь"
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         related_name="favorite",
-        verbose_name='Рецепт'
+        verbose_name="Рецепт"
     )
 
-    def __str__(self):
-        return '{} - {}'.format(self.user, self.recipe)
-
     class Meta:
-        unique_together = ['user', 'recipe']
-        verbose_name = 'Избранный рецепт'
-        verbose_name_plural = 'Избранные рецепты'
+        constraints = [
+            models.UniqueConstraint(fields=["user", "recipe"],
+                                    name="unique_favorite"
+                                    )
+        ]
+        verbose_name = "Избранный рецепт"
+        verbose_name_plural = "Избранные рецепты"
+
+    def __str__(self):
+        return "{} - {}".format(self.user.username, self.recipe.title)
 
 
 class Purchase(models.Model):
@@ -57,19 +65,23 @@ class Purchase(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="purchaser",
-        verbose_name='Пользователь'
+        verbose_name="Пользователь"
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         related_name="purchase",
-        verbose_name='Рецепт'
+        verbose_name="Рецепт"
     )
 
-    def __str__(self):
-        return '{} - {}'.format(self.user, self.recipe)
-
     class Meta:
-        unique_together = ['user', 'recipe']
-        verbose_name = 'Рецепты (покупка)'
-        verbose_name_plural = 'Рецепты (покупка)'
+        constraints = [
+            models.UniqueConstraint(fields=["user", "recipe"],
+                                    name="unique_purchase"
+                                    )
+        ]
+        verbose_name = "Рецепты (покупка)"
+        verbose_name_plural = "Рецепты (покупка)"
+
+    def __str__(self):
+        return "{} - {}".format(self.user, self.recipe)

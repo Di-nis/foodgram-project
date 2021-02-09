@@ -24,21 +24,21 @@ class PurchasesViewSet(BaseCreateDestroyViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
     permission_classes = [permissions.IsAuthenticated, ]
-    lookup_field = 'recipe_id'
+    lookup_field = "recipe_id"
 
 
 class SubscriptionsViewSet(BaseCreateDestroyViewSet):
     queryset = Follow.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = (permissions.IsAuthenticated, )
-    lookup_field = 'author'
+    lookup_field = "author"
 
 
 class FavoritesViewSet(BaseCreateDestroyViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated, ]
-    lookup_field = 'recipe'
+    lookup_field = "recipe"
 
 
 class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
@@ -46,4 +46,4 @@ class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
     serializer_class = IngredientSerializer
     filter_backends = [filters.SearchFilter]
     permission_classes = [permissions.AllowAny, ]
-    search_fields = ['name', ]
+    search_fields = ["name", ]

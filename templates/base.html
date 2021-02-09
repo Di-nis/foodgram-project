@@ -6,7 +6,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{% endblock %} </title>
+    <title>{% block title %}{% endblock %}</title>
+
     {% block css_block %}{% endblock %}
 
     <link rel="shortcut icon" type="image/png" href="{% static "favicon.ico" %}">
@@ -14,7 +15,7 @@
 
 <body class="body">
     <header class="header">
-    {% include 'includes/nav.html' %}
+        {% include 'includes/nav.html' %}
     </header>
 
     {% block content %}{% endblock %}
@@ -22,7 +23,5 @@
     {% include 'includes/footer.html' %}
 
     {% block js_block %}{% endblock %}
-
 </body>
-
 </html>

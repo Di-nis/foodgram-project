@@ -26,20 +26,20 @@
                     <div class="card-user__body">
                         <ul class="card-user__items">
                             {% for recipe in author.recipes.all|slice:":3" %}
-                            <li class="card-user__item">
-                                <div class="recipe">
-                                    {% load thumbnail %}
-                                    {% thumbnail recipe.image "800x800" crop="center" upscale=True as im %}
-                                    <img src="{{ im.url }}" alt="какой-то-текст" class="recipe__image">
-                                    {% endthumbnail %}
-                                    <h3 class="recipe__title">{{ recipe.title }}</h3>
-                                    <p class="recipe__text"><span class="icon-time"></span> {{ recipe.prep_time }} мин.</p>
-                                </div>
-                            </li>
+                                <li class="card-user__item">
+                                    <div class="recipe">
+                                        {% load thumbnail %}
+                                        {% thumbnail recipe.image "800x800" crop="center" upscale=True as im %}
+                                            <img src="{{ im.url }}" alt="какой-то-текст" class="recipe__image">
+                                        {% endthumbnail %}
+                                        <h3 class="recipe__title">{{ recipe.title }}</h3>
+                                        <p class="recipe__text"><span class="icon-time"></span> {{ recipe.prep_time }} мин.</p>
+                                    </div>
+                                </li>
                             {% endfor %}
                             {% if author.recipes.all|length > 3 %}
                                 <li class="card-user__item">
-                                <a href="{% url 'profile' id=author.id %}" class="card-user__link link">Еще {{ author.recipes.all|slice:"3:"|length }} рецептов...</a>
+                                    <a href="{% url 'profile' id=author.id %}" class="card-user__link link">Еще {{ author.recipes.all|slice:"3:"|length }} рецептов...</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -58,7 +58,7 @@
 
     {% if page.has_other_pages %}
         {% include "includes/paginator.html" with items=page paginator=paginator %}
-{% endif %}
+    {% endif %}
 </main>
 
 {% endblock %}

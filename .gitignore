@@ -128,7 +128,14 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-db.sqlite3
+.idea
+.DS_Store
+.AppleDouble
+.LSOverride
+.vscode
 
 send_emails/
+static/
+media/
+
+db.sqlite3

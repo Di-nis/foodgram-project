@@ -5,10 +5,10 @@ from .views import (FavoritesViewSet, IngredientsViewSet, PurchasesViewSet,
                     SubscriptionsViewSet)
 
 v1_router = DefaultRouter()
-v1_router.register('subscriptions', SubscriptionsViewSet, 'subscriptions')
-v1_router.register('favorites', FavoritesViewSet, 'favorites')
-v1_router.register('purchases', PurchasesViewSet, 'purchases')
-v1_router.register('ingredients', IngredientsViewSet, 'ingredients')
+v1_router.register("subscriptions", SubscriptionsViewSet, "subscriptions")
+v1_router.register("favorites", FavoritesViewSet, "favorites")
+v1_router.register("purchases", PurchasesViewSet, "purchases")
+v1_router.register("ingredients", IngredientsViewSet, "ingredients")
 
 
 urlpatterns = [
