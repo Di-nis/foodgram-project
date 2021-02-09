@@ -113,7 +113,7 @@ class RecipeIngredient(models.Model):
         related_name="ingredients_amounts",
         verbose_name="Рецепт"
     )
-    amount = models.FloatField(
+    amount = models.IntegerField(
         "Количество",
         validators=[MinValueValidator(0)],
         blank=True,

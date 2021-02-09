@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import RecipeForm
 from .models import Recipe, RecipeIngredient
+from .utils import save_recipe, edit_recipe
 
 User = get_user_model()
 
@@ -39,16 +40,10 @@ def profile(request, username):
 
 @login_required
 def new_recipe(request):
-    form = RecipeForm(request.POST, files=request.FILES or None)
-    # print(form.is_bound)
+    form = RecipeForm(request.POST or None, files=request.FILES or None)
     if form.is_valid():
-        form.instance.author = request.user
-        form.save()
-        # recipe = form.save(commit=False)
-        # recipe.author = request.user
-        # recipe.save()
+        recipe = save_recipe(request, form)
         return redirect("index")
-    # print(form.errors)
     return render(request,
                   "recipes/new_recipe.html",
                   {"form": form}
@@ -68,14 +63,12 @@ def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     if recipe.author != request.user:
         return redirect("index")
-
     form = RecipeForm(request.POST or None,
                       files=request.FILES or None,
                       instance=recipe)
     if form.is_valid():
-        form.save()
+        edit_recipe(request, form, instance=recipe)
         return redirect("recipe", recipe_id=recipe.id)
-
     return render(request, "recipes/new_recipe.html", {
         "form": form,
         "recipe": recipe,

@@ -32,12 +32,23 @@
             <p class="form__label">{{ form.fields.tags.label }}</p>
             <div class="form__field-group">
                 <div class="tags">
-                    {% for tag in form.fields.tags.choices.queryset %}
-                        <div class="tags__item">
-                            <input type="checkbox" name="{{ tag.display_name }}" id="id_{{ tag.display_name }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }}" {% if tag.pk in form.tags.value %}checked{% endif %}>
-                            <label for="id_{{ tag.display_name }}" class="tags__label">{{ tag.title }}</label>
-                        </div>
-                    {% endfor %}
+                    {% if recipe %}
+                        {% for tag in tag_list %}
+                            <div class="tags__item">
+                                <input type="checkbox" name="tags" value="{{ tag.id }}" id="id_{{ tag.title }}"
+                                    class="tags__checkbox tags__checkbox_style_{{ tag.color }}"  {% if tag in recipe.tags.all %}checked{% endif %}>
+                                <label for="id_tags_{{ tag.id }}" class="tags__label">{{ tag.title }}</label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for tag in form.fields.tags.choices.queryset %}
+                            <div class="tags__item">
+                                <input type="checkbox" name="tags" value="{{ tag.id }}" id="id_{{ tag.title }}"
+                                    class="tags__checkbox tags__checkbox_style_{{ tag.color }}" checked>
+                                <label for="id_tags_{{ tag.id }}" class="tags__label">{{ tag.title }}</label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <span class="form__error">{{ form.tags.errors }}</span>
             </div>
@@ -52,7 +63,7 @@
                         <div class="form__dropdown-items"></div>
                     </div>
                     <input type="number" id="cantidad" class="form__input" min="0">
-                    <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
+                    <label for="cantidad" class="form__label" id="cantidadVal"></label>
                 </div>
                 <div class="form__field-group-ingredientes-container">
                     {% if recipe %}
@@ -68,7 +79,7 @@
                     {% endif %}
                 </div>
                 <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                <span class="form__error">{{ form.tags.errors }}</span>
+                <span class="form__error">{{ form.ingredients.errors }}</span>
             </div>
         </div>
 

@@ -23,6 +23,4 @@ urlpatterns = [
     path("recipe/", include(extra_patterns_recipe)),
     path("my/", include(extra_patterns_my)),
     path("<str:username>/", views.profile, name="profile"),
-    # path("404/", views.page_not_found, name="page_not_found"),
-    # path("500/", views.server_error, name="server_error"),
 ]
