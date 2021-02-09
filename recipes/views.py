@@ -10,10 +10,13 @@ from .models import Recipe, RecipeIngredient
 from .utils import edit_recipe, save_recipe
 
 User = get_user_model()
+TAGS = ["breakfast", "lunch", "dinner"]
 
 
 def index(request):
-    recipe_list = Recipe.objects.all()
+    search_query = request.GET.getlist("tag", TAGS)
+    recipe_list = Recipe.objects.filter(
+        tags__display_name__in=search_query).distinct()
     paginator = Paginator(recipe_list, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
@@ -26,7 +29,9 @@ def index(request):
 
 def profile(request, username):
     user_profile = get_object_or_404(User, username=username)
-    recipes = user_profile.recipes.all()
+    search_query = request.GET.getlist("tag", TAGS)
+    recipes = user_profile.recipes.filter(
+        tags__display_name__in=search_query).distinct()
     paginator = Paginator(recipes, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
@@ -87,9 +92,11 @@ def recipe_delete(request, recipe_id):
 
 @login_required
 def favorite_recipes(request):
+    search_query = request.GET.getlist("tag", TAGS)
     recipe_list = Recipe.objects.filter(
         favorite__user=request.user
-    )
+        ).filter(
+            tags__display_name__in=search_query).dictinct()
     paginator = Paginator(recipe_list, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
@@ -129,20 +136,6 @@ def follow_index(request):
     )
 
 
-def tag_filter(request, display_name):
-    recipe_list = Recipe.objects.filter(
-        tags__display_name=display_name)
-    paginator = Paginator(recipe_list, 6)
-    page_number = request.GET.get("page")
-    page = paginator.get_page(page_number)
-    return render(request, "recipes/recipes_filter.html", {
-        "page": page,
-        "paginator": paginator,
-        "display_name": display_name
-        }
-    )
-
-
 @login_required
 def download(request):
     ingredients = RecipeIngredient.objects.filter(
@@ -163,7 +156,7 @@ def download(request):
             pass
 
     for res in shop_list:
-        text_output += f'{res} - {shop_list[res][0]} {shop_list[res][1]}\n'
+        text_output += f"{res} - {shop_list[res][0]} {shop_list[res][1]}\n"
     response = HttpResponse(text_output, content_type="text/plain")
-    response["Content-Disposition"] = 'attachment; filename="shop_list.txt"'
+    response["Content-Disposition"] = "attachment; filename='shop_list.txt'"
     return response

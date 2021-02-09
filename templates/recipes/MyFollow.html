@@ -21,7 +21,7 @@
             {% if author.recipes.exists %}
                 <div class="card-user" data-author="{{ author.id }}">
                     <div class="card-user__header">
-                        <h2 class="card-user__title">{{ author.get_full_name }}</h2>
+                        <h2 class="card-user__title">{{ author|display_name }}</h2>
                     </div>
                     <div class="card-user__body">
                         <ul class="card-user__items">
