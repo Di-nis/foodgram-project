@@ -9,6 +9,7 @@ from .forms import RecipeForm
 from .models import Recipe, RecipeIngredient
 from .utils import edit_recipe, save_recipe
 
+
 User = get_user_model()
 TAGS = ["breakfast", "lunch", "dinner"]
 
@@ -125,7 +126,7 @@ def shop_list(request):
 def follow_index(request):
     user_list = User.objects.filter(
         following__user=request.user).order_by("id")
-    paginator = Paginator(user_list, 3)
+    paginator = Paginator(user_list, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
     return render(request, "recipes/MyFollow.html", {
@@ -157,5 +158,5 @@ def download(request):
     for res in shop_list:
         text_output += f"{res} - {shop_list[res][0]} {shop_list[res][1]}\n"
     response = HttpResponse(text_output, content_type="text/plain")
-    response["Content-Disposition"] = "attachment; filename='shop_list.txt'"
+    response["Content-Disposition"] = 'attachment; filename="shop_list.txt"'
     return response
