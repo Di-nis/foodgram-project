@@ -31,14 +31,14 @@ class SubscriptionsViewSet(BaseCreateDestroyViewSet):
     queryset = Follow.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = (permissions.IsAuthenticated, )
-    lookup_field = "author"
+    lookup_field = "author_id"
 
 
 class FavoritesViewSet(BaseCreateDestroyViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated, ]
-    lookup_field = "recipe"
+    lookup_field = "recipe_id"
 
 
 class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):
