@@ -39,7 +39,7 @@
                             {% endfor %}
                             {% if author.recipes.all|length > 3 %}
                                 <li class="card-user__item">
-                                    <a href="{% url 'profile' id=author.id %}" class="card-user__link link">Еще {{ author.recipes.all|slice:"3:"|length }} рецептов...</a>
+                                    <a href="{% url 'profile' username=author.username %}" class="card-user__link link">Еще {{ author.recipes.all|slice:"3:"|length }} рецептов...</a>
                                 </li>
                             {% endif %}
                         </ul>
