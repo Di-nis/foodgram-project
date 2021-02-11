@@ -62,7 +62,7 @@ addSubscriptions(id) {
   })
     .then( e => {
         if(e.ok) {
-            return e.json()
+            return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
@@ -77,7 +77,7 @@ removeSubscriptions (id) {
   })
     .then( e => {
         if(e.ok) {
-            return e.json()
+            return {"success": true}
         }
         return Promise.reject(e.statusText)
     })
