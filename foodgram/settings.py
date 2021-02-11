@@ -9,8 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django key must be set!')
 
-DEBUG = False
-# DEBUG = True
+# DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
