@@ -13,7 +13,6 @@ def get_ingredients(request):
             ingredients[name] = request.POST[
                 f'valueIngredient_{num}'
             ]
-
     return ingredients
 
 

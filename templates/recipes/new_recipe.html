@@ -62,7 +62,7 @@
                         <input type="text" id="nameIngredient" class="form__input">
                         <div class="form__dropdown-items"></div>
                     </div>
-                    <input type="number" id="cantidad" class="form__input" min="0">
+                    <input type="number" id="cantidad" class="form__input" min="0" oninput="validity.valid||(value='');">
                     <label for="cantidad" class="form__label" id="cantidadVal"></label>
                 </div>
                 <div class="form__field-group-ingredientes-container">
@@ -71,7 +71,7 @@
                             <div class="form__field-item-ingredient" id="ing_{{ forloop.counter }}">
                                 <span> {{ ingredient }}</span>
                                 <span class="form__field-item-delete"></span>
-                                <input id="nameIngredient_{{ forloop.counter }}" name="nameIngredient_{{ forloop.counter }}" type="hidden" value="{{ ingredient.ingredient.name }}">
+                                <input id="nameIngredient_{{ forloop.counter }}" name="nameIngredient_{{ forloop.counter }}" type="hidden" value='{{ ingredient.ingredient.name }}'>
                                 <input id="valueIngredient_{{ forloop.counter }}" name="valueIngredient_{{ forloop.counter }}" type="hidden" value="{{ ingredient.amount }}">
                                 <input id="unitsIngredient_{{ forloop.counter }}" name="unitsIngredient_{{ forloop.counter }}" type="hidden" value="{{ ingredient.ingredient.dimension }}">
                             </div>
