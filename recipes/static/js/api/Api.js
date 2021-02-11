@@ -12,7 +12,7 @@ getPurchases () {
   })
     .then( e => {
         if(e.ok) {
-            return {"success": true}
+            return e.json()
         }
         return Promise.reject(e.statusText)
     })
@@ -28,7 +28,7 @@ addPurchases (id) {
   })
     .then( e => {
         if(e.ok) {
-            return {"success": true}
+            return e.json()
         }
         return Promise.reject(e.statusText)
     })
@@ -43,7 +43,7 @@ removePurchases (id) {
   })
     .then( e => {
         if(e.ok) {
-          return {"success": true}
+          return e.json()
         }
         return Promise.reject(e.statusText)
     })
@@ -62,7 +62,7 @@ addSubscriptions(id) {
   })
     .then( e => {
         if(e.ok) {
-            return {"success": true}
+            return e.json()
         }
         return Promise.reject(e.statusText)
     })
@@ -77,7 +77,7 @@ removeSubscriptions (id) {
   })
     .then( e => {
         if(e.ok) {
-            return {"success": true}
+            return e.json()
         }
         return Promise.reject(e.statusText)
     })
@@ -95,7 +95,7 @@ addFavorites (id)  {
   })
       .then( e => {
           if(e.ok) {
-              return {"success": true}
+              return e.json()
           }
           return Promise.reject(e.statusText)
       })
@@ -110,7 +110,7 @@ removeFavorites (id) {
   })
       .then( e => {
           if(e.ok) {
-              return {"success": true}
+              return e.json()
           }
           return Promise.reject(e.statusText)
       })
