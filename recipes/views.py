@@ -125,7 +125,7 @@ def shop_list(request):
 @login_required
 def follow_index(request):
     user_list = User.objects.filter(
-        following__user=request.user).order_by("id")
+        following__user=request.user)
     paginator = Paginator(user_list, settings.PAGINATION_PAGE_SIZE)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
