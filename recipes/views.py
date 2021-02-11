@@ -112,12 +112,8 @@ def shop_list(request):
     recipe_list = Recipe.objects.filter(
         purchase__user=request.user
     )
-    paginator = Paginator(recipe_list, settings.PAGINATION_PAGE_SIZE)
-    page_number = request.GET.get("page")
-    page = paginator.get_page(page_number)
     return render(request, "recipes/shop_list.html", {
-        "page": page,
-        "paginator": paginator
+        "recipe_list": recipe_list
         }
     )
 

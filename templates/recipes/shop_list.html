@@ -15,23 +15,20 @@
     </div>
     <div class="card-list card-list_column">
         <ul class="shopping-list">
-            {% for recipe in page %}
-            <li class="shopping-list__item" data-id="{{ recipe.id }}">
-                <div class="recipe recipe_reverse">
-                    {% load thumbnail %}
-                    {% thumbnail recipe.image "800x800" crop="center" upscale=True as im %}
-                        <img src="{{ im.url }}" alt="какой-то текст" class="recipe__image recipe__image_big">
-                    {% endthumbnail %}
-                    <h3 class="recipe__title">{{ recipe.title }}</h3>
-                    <p class="recipe__text"><span class="icon-time"></span> {{ recipe.prep_time }} мин.</p>
-                </div>
-                <a href="#" class="shopping-list__button link">Удалить</a>
-            </li>
+            {% for recipe in recipe_list %}
+                <li class="shopping-list__item" data-id="{{ recipe.id }}">
+                    <div class="recipe recipe_reverse">
+                        {% load thumbnail %}
+                        {% thumbnail recipe.image "800x800" crop="center" upscale=True as im %}
+                            <img src="{{ im.url }}" alt="какой-то текст" class="recipe__image recipe__image_big">
+                        {% endthumbnail %}
+                        <h3 class="recipe__title">{{ recipe.title }}</h3>
+                        <p class="recipe__text"><span class="icon-time"></span> {{ recipe.prep_time }} мин.</p>
+                    </div>
+                    <a href="#" class="shopping-list__button link">Удалить</a>
+                </li>
             {% endfor %}
         </ul>
-        {% if page.has_other_pages %}
-            {% include "includes/paginator.html" with items=page paginator=paginator %}
-        {% endif %}
         <a href="{% url 'shop_list_download' %}"><button class="button button_style_blue">Скачать список</button></a>
     </div>
 </main>
