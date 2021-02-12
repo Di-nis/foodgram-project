@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
-from rest_framework import filters, permissions, viewsets
+from rest_framework import filters, permissions, viewsets, status
+from rest_framework.response import Response
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin)
 
@@ -12,12 +13,17 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
 User = get_user_model()
 
 
-class BaseCreateDestroyViewSet(
-    CreateModelMixin,
-    DestroyModelMixin,
-    viewsets.GenericViewSet
-):
-    pass
+class BaseCreateDestroyViewSet(CreateModelMixin,
+                               DestroyModelMixin,
+                               viewsets.GenericViewSet
+                               ):
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        success = instance.delete()
+        return Response({'success': bool(success)},
+                        status=status.HTTP_200_OK
+                        )
 
 
 class PurchasesViewSet(BaseCreateDestroyViewSet):
@@ -38,7 +44,7 @@ class FavoritesViewSet(BaseCreateDestroyViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated, ]
-    lookup_field = "recipe_id"
+    lookup_field = "recipe"
 
 
 class IngredientsViewSet(ListModelMixin, viewsets.GenericViewSet):

@@ -49,6 +49,7 @@ removePurchases (id) {
     .then( e => {
         if(e.ok) {
           return e.json()
+          // return {'success': true}
         }
         return Promise.reject(e.statusText)
     })
@@ -120,6 +121,7 @@ removeFavorites (id) {
       .then( e => {
           if(e.ok) {
               return e.json()
+              // return {'success': true}
           }
           return Promise.reject(e.statusText)
       })
