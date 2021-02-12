@@ -21,7 +21,7 @@ class BaseCreateDestroyViewSet(CreateModelMixin,
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         success = instance.delete()
-        return Response({'success': bool(success)},
+        return Response({"success": bool(success)},
                         status=status.HTTP_200_OK
                         )
 
